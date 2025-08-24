@@ -1,0 +1,3821 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca Digital - CECA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #2d5f8b 0%, #3a7ca5 100%);
+            color: white;
+            padding: 25px 15px;
+            text-align: center;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .back-button {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 15px;
+            background-color: #4cb5f5;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .back-button:hover {
+            background-color: #3a7ca5;
+        }
+        
+        .search-filters {
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+        }
+        
+        .search-box {
+            position: relative;
+            margin-bottom: 15px;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .search-box input:focus {
+            border-color: #4cb5f5;
+            outline: none;
+        }
+        
+        .search-box i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .filter-select {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            font-size: 14px;
+            cursor: pointer;
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .books-stats {
+            background-color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .stat-item {
+            padding: 12px;
+            background-color: #f0f8ff;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2d5f8b;
+            margin-bottom: 5px;
+        }
+        
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .book-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .book-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        .book-cover {
+            height: 150px;
+            background-color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        
+        .book-card:hover .book-cover img {
+            transform: scale(1.05);
+        }
+        
+        .book-info {
+            padding: 12px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .book-title {
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #222;
+            font-size: 0.95rem;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .book-author {
+            color: #666;
+            margin-bottom: 8px;
+            font-size: 0.8rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .book-description {
+            color: #777;
+            font-size: 0.75rem;
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            flex-grow: 1;
+        }
+        
+        .book-category {
+            margin-top: auto;
+            padding: 4px 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            color: #495057;
+            align-self: flex-start;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 25px;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .pagination button {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .pagination button:hover {
+            background: #f0f0f0;
+        }
+        
+        .pagination button.active {
+            background: #2d5f8b;
+            color: white;
+            border-color: #2d5f8b;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px 15px;
+            background: #2d5f8b;
+            color: white;
+            margin-top: 40px;
+            border-radius: 15px 15px 0 0;
+            font-size: 0.9rem;
+        }
+        
+        .category-section {
+            margin-bottom: 30px;
+        }
+        
+        .category-title {
+            font-size: 1.3rem;
+            color: #2d5f8b;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #4cb5f5;
+        }
+        
+        .no-books {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        @media (max-width: 480px) {
+            .filter-group {
+                flex-direction: column;
+            }
+            
+            .filter-select {
+                width: 100%;
+            }
+            
+            header h1 {
+                font-size: 1.5rem;
+            }
+            
+            header p {
+                font-size: 0.9rem;
+            }
+            
+            .books-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 12px;
+            }
+            
+            .book-cover {
+                height: 130px;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .books-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            }
+            
+            .book-cover {
+                height: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Biblioteca Digital Casimiro de Abreu</h1>
+        <p>Explore nosso acervo completo de livros disponíveis para empréstimo</p>
+        <a href="https://bielcrod.github.io/ache-seu-livro/" class="back-button">
+            <i class="fas fa-arrow-left"></i> Voltar para o Quiz
+        </a>
+    </header>
+    
+    <div class="container">
+        <div class="search-filters">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Pesquisar por título, autor...">
+                <i class="fas fa-search"></i>
+            </div>
+            
+            <div class="filter-group">
+                <select class="filter-select" id="categoryFilter">
+                    <option value="">Todas as categorias</option>
+                    <option value="Literatura Brasileira">Literatura Brasileira</option>
+                    <option value="Literatura Estrangeira">Literatura Estrangeira</option>
+                    <option value="Clássicos">Clássicos</option>
+                    <option value="Romance">Romance</option>
+                    <option value="Ficção Científica">Ficção Científica</option>
+                    <option value="Fantasia">Fantasia</option>
+                    <option value="Biografia">Biografia</option>
+                    <option value="Poesia">Poesia</option>
+                    <option value="Teatro">Teatro</option>
+                    <option value="Cordel">Cordel</option>
+                    <option value="Quadrinhos">Quadrinhos</option>
+                    <option value="Infantojuvenil">Infantojuvenil</option>
+                    <option value="Didáticos">Didáticos</option>
+                </select>
+                
+                <select class="filter-select" id="sortFilter">
+                    <option value="title">Ordenar por título</option>
+                    <option value="author">Ordenar por autor</option>
+                    <option value="recent">Mais recentes</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="books-stats">
+            <h2>Nosso Acervo</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" id="totalBooks">0</div>
+                    <div class="stat-label">Livros no total</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="brazilianCount">0</div>
+                    <div class="stat-label">Literatura Brasileira</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="classicsCount">0</div>
+                    <div class="stat-label">Literatura Estrangeira</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="comicsCount">0</div>
+                    <div class="stat-label">Infantojuvenil</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="books-grid" id="booksGrid">
+            <div class="loading">
+                <p>Carregando acervo da biblioteca...</p>
+            </div>
+        </div>
+        
+        <div class="pagination" id="pagination">
+            <!-- A paginação será gerada aqui via JavaScript -->
+        </div>
+    </div>
+    
+    <footer>
+        <p>Biblioteca Escola Casimiro de Abreu © 2025 - Todos os direitos reservados</p>
+      <p>Caso encontre problemas no site, entre em contato @bielcrod</p>
+    </footer>
+
+<script>
+    // Variáveis de estado
+    let currentPage = 1;
+    const booksPerPage = 12;
+    let allBooks = [];
+    let filteredBooks = [];
+    
+    // Elementos do DOM
+    const booksGrid = document.getElementById('booksGrid');
+    const pagination = document.getElementById('pagination');
+    const totalBooksElement = document.getElementById('totalBooks');
+    const brazilianCountElement = document.getElementById('brazilianCount');
+    const classicsCountElement = document.getElementById('classicsCount');
+    const comicsCountElement = document.getElementById('comicsCount');
+
+    // Mapeamento de categorias para cores
+    const categoryColors = {
+        "Literatura Brasileira": "#2d5f8b",
+        "Literatura Estrangeira": "#3a7ca5",
+        "Clássicos": "#8b572d",
+        "Romance": "#c25b5b",
+        "Ficção Científica": "#5b8bc2",
+        "Fantasia": "#5bc28b",
+        "Biografia": "#8b5bc2",
+        "Poesia": "#c25b8b",
+        "Teatro": "#c28b5b",
+        "Cordel": "#5bc2c2",
+        "Quadrinhos": "#c2c25b",
+        "Infantojuvenil": "#5b5bc2",
+        "Didáticos": "#8b8b8b",
+        "Outros": "#5b8b5b"
+    };
+
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', function() {
+        setupEventListeners();
+        loadAllBooks();
+    });
+
+    // Configurar event listeners
+    function setupEventListeners() {
+        document.getElementById('searchInput').addEventListener('input', filterBooks);
+        document.getElementById('categoryFilter').addEventListener('change', filterBooks);
+        document.getElementById('sortFilter').addEventListener('change', filterBooks);
+    }
+
+    // Carregar todos os livros
+    function loadAllBooks() {
+        allBooks = getAllBooks();
+        filteredBooks = [...allBooks];
+        updateBookCounts();
+        renderBooks();
+    }
+
+    // Obter todos os livros
+    function getAllBooks() {
+        return [
+            // PRIMEIRO GRUPO DE 50 LIVROS
+            {
+                id: 1,
+                title: "Admirável mundo novo",
+                author: "Aldous Huxley",
+                category: "Ficção Científica",
+                description: "Em uma sociedade organizada segundo princípios estritamente científicos, Bernard Marx desafia o mundo.",
+                year: 1932
+            },
+            {
+                id: 2,
+                title: "As almas que se quebram no chão",
+                author: "Luiz Ruffato",
+                category: "Literatura Brasileira",
+                description: "Ambientado na Alemanha Oriental de fins dos anos 1980, o romance conta a história de um estudante brasileiro perdido entre as drogas e a ambição literária.",
+                year: 2005
+            },
+            {
+                id: 3,
+                title: "Andarilhas",
+                author: "Cristiana Brasil",
+                category: "Literatura Brasileira",
+                description: "Adelina mora com os pais e as duas meias-irmãs mais velhas. As relações entre as três meninas são intensas.",
+                year: 2010
+            },
+            {
+                id: 4,
+                title: "O aprendiz do oriente",
+                author: "Luis Vilela",
+                category: "Literatura Brasileira",
+                description: "O aprendiz do Oriente é um romance histórico que se passa na Idade Média.",
+                year: 2008
+            },
+            {
+                id: 5,
+                title: "Aqui entre nós",
+                author: "Marina Colasanti",
+                category: "Literatura Brasileira",
+                description: "Mais que irmãos, dois grandes amigos. Um busca seus sonhos no estrangeiro.",
+                year: 2010
+            },
+            {
+                id: 6,
+                title: "Aventura em Bagdá",
+                author: "Agatha Christie",
+                category: "Romance",
+                description: "No sítio arqueológico de Tell Yarimjah, a enfermeira Amy Leatheran recebe a missão de cuidar da frágil e enigmática Louise Leidner.",
+                year: 1936
+            },
+            {
+                id: 7,
+                title: "O avesso da pele",
+                author: "Jeferson Tenório",
+                category: "Literatura Brasileira",
+                description: "É a história de Pedro, que, após a morte do pai, sai em busca de resgatar o passado da família.",
+                year: 2020
+            },
+            {
+                id: 8,
+                title: "Beijada por um anjo",
+                author: "Elizabeth Chandler",
+                category: "Romance",
+                description: "Ivy sempre acreditou em anjos... Quando ela conhece Tristan, descobre que ele é o amor da sua vida.",
+                year: 1995
+            },
+            {
+                id: 9,
+                title: "Blade Runner",
+                author: "Philip K. Dick",
+                category: "Ficção Científica",
+                description: "Rick Deckard é um caçador de recompensas, vivendo em uma San Francisco decadente.",
+                year: 1968
+            },
+            {
+                id: 10,
+                title: "A cabeleira de Berenice",
+                author: "Marina Colasanti",
+                category: "Infantojuvenil",
+                description: "Berenice tem uma enorme cabeleira vermelha, é miudinha e usa óculos.",
+                year: 1996
+            },
+            {
+                id: 11,
+                title: "Os caras malvados",
+                author: "Aaron Blabey",
+                category: "Infantojuvenil",
+                description: "Todo mundo achava que eles eram malvados, perigosos e assustadores.",
+                year: 2015
+            },
+            {
+                id: 12,
+                title: "A casa a beira do abismo",
+                author: "Moacyr Scliar",
+                category: "Literatura Brasileira",
+                description: "Um manuscrito misterioso é encontrado por dois amigos dentro de uma incrível mansão abandonada.",
+                year: 1982
+            },
+            {
+                id: 13,
+                title: "O centauro no jardim",
+                author: "Moacyr Scliar",
+                category: "Literatura Brasileira",
+                description: "No interior do Rio Grande do Sul, na pacata família Tratskovsky, nasce um centauro.",
+                year: 1980
+            },
+            {
+                id: 14,
+                title: "Confissões de um amigo imaginário",
+                author: "Michelle Cuevas",
+                category: "Infantojuvenil",
+                description: "Jacques tem uma leve suspeita de que ninguém gosta dele.",
+                year: 2012
+            },
+            {
+                id: 15,
+                title: "Cristal polonês",
+                author: "Tadeusz Nowakowski",
+                category: "Literatura Estrangeira",
+                description: "Três irmãos de família polonesa vivem uma vida regrada pelas ordens de máma e pelos silêncios de táta.",
+                year: 1963
+            },
+            {
+                id: 16,
+                title: "Destinada",
+                author: "P.C. Cast",
+                category: "Fantasia",
+                description: "Há novas forças trabalhando na Morada da Noite. Algumas delas ameaçam sua estabilidade.",
+                year: 2013
+            },
+            {
+                id: 17,
+                title: "O diabo dos números",
+                author: "Hans Magnus Enzensberger",
+                category: "Infantojuvenil",
+                description: "Matemática? Aquela montanha de números sem sentido?",
+                year: 1997
+            },
+            {
+                id: 18,
+                title: "2001 uma odisseia no espaço",
+                author: "Arthur C. Clarke",
+                category: "Ficção Científica",
+                description: "Nos primórdios da humanidade, quando a fome e os predadores ameaçavam a raça humana.",
+                year: 1968
+            },
+            {
+                id: 19,
+                title: "Eu Robô",
+                author: "Isaac Asimov",
+                category: "Ficção Científica",
+                description: "Eu, Robô é um conjunto de nove contos que relatam a evolução dos autômatos através do tempo.",
+                year: 1950
+            },
+            {
+                id: 20,
+                title: "A falência",
+                author: "Júlia Lopes de Almeida",
+                category: "Literatura Brasileira",
+                description: "Trouxe a discussão de temas como o adultério feminino e a decadência econômica e moral da burguesia após a abolição da escravatura.",
+                year: 1901
+            },
+            {
+                id: 21,
+                title: "Fahrenheit 451",
+                author: "Ray Bradbury",
+                category: "Ficção Científica",
+                description: "Guy Montag é um bombeiro. Sua profissão é atear fogo nos livros.",
+                year: 1953
+            },
+            {
+                id: 22,
+                title: "O feijão e o sonho",
+                author: "Orígenes Lessa",
+                category: "Literatura Brasileira",
+                description: "O poeta Campos Lara é um sonhador que deixa as necessidades do cotidiano em segundo plano.",
+                year: 1938
+            },
+            {
+                id: 23,
+                title: "As filhas sem nome",
+                author: "Lisa See",
+                category: "Literatura Estrangeira",
+                description: "Sou uma moça do interior, por favor, seja gentil e cuide de mim.",
+                year: 2009
+            },
+            {
+                id: 24,
+                title: "No fundo de doze histórias corre um rio",
+                author: "Vários autores",
+                category: "Literatura Brasileira",
+                description: "Uma coletânea de contos sobre a cidade maravilhosa assinados por autores clássicos e contemporâneos.",
+                year: 2015
+            },
+            {
+                id: 25,
+                title: "O garoto verde",
+                author: "Sérgio Capparelli",
+                category: "Infantojuvenil",
+                description: "Pedro é um garoto verde! Ecológico sem ser chato, gosta de jogar bola, de tocar guitarra.",
+                year: 2008
+            },
+            {
+                id: 26,
+                title: "O gênio do crime",
+                author: "João Carlos Marinho",
+                category: "Infantojuvenil",
+                description: "Seu Tomé é um homem bom, proprietário de uma fábrica de figurinhas de futebol.",
+                year: 1969
+            },
+            {
+                id: 27,
+                title: "O homem que calculava",
+                author: "Malba Tahan",
+                category: "Didáticos",
+                description: "É uma oportunidade para os aficionados dos algarismos e jogos matemáticos se deliciarem.",
+                year: 1938
+            },
+            {
+                id: 28,
+                title: "A ilha do tesouro",
+                author: "Robert Louis Stevenson",
+                category: "Aventura",
+                description: "A vida de Jim Hawkins nunca mais será a mesma depois de conhecer Billy Jones.",
+                year: 1883
+            },
+            {
+                id: 29,
+                title: "Lua de larvas",
+                author: "Moira Young",
+                category: "Ficção Científica",
+                description: "Standish Treadwell é um jovem disléxico que vê o mundo de maneira diferente da maioria.",
+                year: 2011
+            },
+            {
+                id: 30,
+                title: "A máquina do tempo",
+                author: "H.G. Wells",
+                category: "Ficção Científica",
+                description: "Uma viagem de oitocentos mil anos à frente de sua era.",
+                year: 1895
+            },
+            {
+                id: 31,
+                title: "O menino de Alepo",
+                author: "Mario Bellatin",
+                category: "Literatura Estrangeira",
+                description: "Conta a história de um menino que sofre de Síndrome de Asperger e vive uma vida tranquila com a família em Alepo até estourar o conflito.",
+                year: 2015
+            },
+            {
+                id: 32,
+                title: "O menino que comeu uma biblioteca",
+                author: "Eloísa Bocheco",
+                category: "Infantojuvenil",
+                description: "Eva, uma menina de família muito simples criada pela avó severa, gosta de brincar com as cartas do tarô.",
+                year: 2010
+            },
+            {
+                id: 33,
+                title: "1984",
+                author: "George Orwell",
+                category: "Ficção Científica",
+                description: "Uma sociedade completamente dominada pelo Estado, onde tudo é feito coletivamente, mas cada qual vive sozinho.",
+                year: 1949
+            },
+            {
+                id: 34,
+                title: "O olho do lobo",
+                author: "Daniel Pennac",
+                category: "Infantojuvenil",
+                description: "Traz duas histórias de vidas. A do Lobo Azul, que foi capturado no Alasca.",
+                year: 1993
+            },
+            {
+                id: 35,
+                title: "Manobra radical",
+                author: "Luiz Antonio Aguiar",
+                category: "Infantojuvenil",
+                description: "Júnior é rico e quer conquistar Adriana. Robson é pobre e uma fera no skate.",
+                year: 2005
+            },
+            {
+                id: 36,
+                title: "Oxente a mulher enterrada viva",
+                author: "Rogério Andrade Barbosa",
+                category: "Infantojuvenil",
+                description: "Bem no centro história de Salvador Didi desaparece misteriosamente.",
+                year: 2007
+            },
+            {
+                id: 37,
+                title: "A sábia de waterloo",
+                author: "Michael Morpurgo",
+                category: "Literatura Estrangeira",
+                description: "A batalha napoleônica vista pelos olhos de uma coelha.",
+                year: 2014
+            },
+            {
+                id: 38,
+                title: "O reino deste mundo",
+                author: "Alejo Carpentier",
+                category: "Literatura Estrangeira",
+                description: "É um pequeno romance que conta a independência do Haiti.",
+                year: 1949
+            },
+            {
+                id: 39,
+                title: "Um sonho no caroço do abacate",
+                author: "Moacyr Scliar",
+                category: "Literatura Brasileira",
+                description: "Mardoqueu Stern, filho de judeus lituanos, de uma família simples, conhece Carlos no Colégio Padre Juvêncio.",
+                year: 1999
+            },
+            {
+                id: 40,
+                title: "Superbrinquedos duram o verão todo",
+                author: "Brian Aldiss",
+                category: "Ficção Científica",
+                description: "No conto que abre esta antologia, um casal adota um andróide de cinco anos.",
+                year: 2001
+            },
+            {
+                id: 41,
+                title: "Terra sonâmbula",
+                author: "Mia Couto",
+                category: "Literatura Estrangeira",
+                description: "Um ônibus incendiado em uma estrada poeirenta serve de abrigo ao velho Tuahir e ao menino Muidinga.",
+                year: 1992
+            },
+            {
+                id: 42,
+                title: "A turma da rua quinze",
+                author: "Márcio Vassallo",
+                category: "Infantojuvenil",
+                description: "O desaparecimento de um amigo leva a turma da rua Quinze a embarcar em uma emocionante aventura.",
+                year: 2006
+            },
+            {
+                id: 43,
+                title: "Uma vez",
+                author: "Morris Gleitzman",
+                category: "Literatura Estrangeira",
+                description: "Felix Salinger, um menino judeu que mora na Polônia, adora ler e é ótimo em escrever e contar histórias.",
+                year: 2005
+            },
+            {
+                id: 44,
+                title: "O vento nos salgueiros",
+                author: "Kenneth Grahame",
+                category: "Infantojuvenil",
+                description: "Por mais de um século, O vento nos salgueiros e seus cativantes protagonistas encantam crianças de todas as idades.",
+                year: 1908
+            },
+            {
+                id: 45,
+                title: "Vento, areia e amoras bravas",
+                author: "Heloisa Prieto",
+                category: "Literatura Brasileira",
+                description: "É a história da personagem Lourença da pré-adolescência à juventude, quando ela se descobre escritora.",
+                year: 2002
+            },
+            {
+                id: 46,
+                title: "Vento sinistro",
+                author: "Shannon Messenger",
+                category: "Fantasia",
+                description: "Geralmente, tudo o que é preciso é um aceno de sua mão para domar o mais violento clima.",
+                year: 2012
+            },
+            {
+                id: 47,
+                title: "Volto ao anoitecer",
+                author: "Aharon Appelfeld",
+                category: "Literatura Estrangeira",
+                description: "A mãe de Adam, ao levá-lo para a floresta, diz que voltaria ao anoitecer. Mas ela não aparece naquela noite.",
+                year: 2011
+            },
+            {
+                id: 48,
+                title: "Você é livre",
+                author: "Brigitte Labbé",
+                category: "Infantojuvenil",
+                description: "Um romance-reportagem sobre escravidão e liberdade no Níger.",
+                year: 2008
+            },
+            {
+                id: 49,
+                title: "AQUI TEM COISA",
+                author: "Patativa do Assaré",
+                category: "Cordel",
+                description: "Aqui tem coisa é o penúltimo título do poeta de Assaré.",
+                year: 1994
+            },
+            {
+                id: 50,
+                title: "A BOTIJA",
+                author: "Antônio Torres",
+                category: "Literatura Brasileira",
+                description: "A Botija conta a história da pequena cidade portuguesa de Castelo Vivo.",
+                year: 2003
+            },
+            {
+                id: 51,
+                title: "BREVE HISTORIA DA LITERATURA DE CORDEL",
+                author: "Vários autores",
+                category: "Cordel",
+                description: "No Nordeste Brasileiro surgiu a Literatura de Cordel.",
+                year: 2005
+            },
+            {
+                id: 52,
+                title: "CAMINHOS DIVERSOS SOB OS SIGNOS DO CORDEL",
+                author: "Costa Senna",
+                category: "Cordel",
+                description: "A literatura de cordel é uma das expressões culturais mais populares do Brasil.",
+                year: 2007
+            },
+            {
+                id: 53,
+                title: "CERVANTES EM CORDEL",
+                author: "Arievaldo Viana e Stélio Torquato",
+                category: "Cordel",
+                description: "Histórias bem construídas e com desfechos emocionantes não têm idade.",
+                year: 2010
+            },
+            {
+                id: 54,
+                title: "CORA CORALINA- MEU LIVRO DE CORDEL",
+                author: "Cora Coralina",
+                category: "Cordel",
+                description: "Cora Coralina, grande contadora de histórias, com sua literatura de cordel.",
+                year: 1976
+            },
+            {
+                id: 55,
+                title: "O CORCUNDA DE NOTRE-DAME EM CORDEL",
+                author: "João Gomes de Sá",
+                category: "Cordel",
+                description: "O Corcunda de Notre-Dame, de Victor Hugo, é o tema inspirador deste volume.",
+                year: 2008
+            },
+            {
+                id: 56,
+                title: "CORDEL EM ARTE E VERSOS",
+                author: "Varneci Nascimento",
+                category: "Cordel",
+                description: "O leitor vai saber sobre as origens da literatura de Cordel.",
+                year: 2010
+            },
+            {
+                id: 57,
+                title: "O CORTIÇO EM CORDEL",
+                author: "José Francisco Borges",
+                category: "Cordel",
+                description: "O Cortiço é um romance naturalista do brasileiro Aluísio de Azevedo.",
+                year: 2005
+            },
+            {
+                id: 58,
+                title: "DESAFIOS DE CORDEL",
+                author: "Gonçalo Ferreira da Silva",
+                category: "Cordel",
+                description: "Desafios de cordel apresenta um panorama da literatura de cordel.",
+                year: 2008
+            },
+            {
+                id: 59,
+                title: "DEZ CLÁSSICOS UNIVERSAIS EM CORDEL",
+                author: "Klévisson Viana",
+                category: "Cordel",
+                description: "Doze obras de referência da literatura ocidental narradas em cordel.",
+                year: 2012
+            },
+            {
+                id: 60,
+                title: "AS AVENTURAS DE DOM QUIXOTE EM VERSOS DE CORDEL",
+                author: "Klévisson Viana",
+                category: "Cordel",
+                description: "Nesta obra, o autor adapta o clássico Dom Quixote para os versos da tradicional literatura de cordel.",
+                year: 2015
+            },
+            {
+                id: 61,
+                title: "FEIRA DE VERSOS POESIA DE CORDEL",
+                author: "Vários autores",
+                category: "Cordel",
+                description: "Este livro é uma coleção de pérolas do cordel nacional.",
+                year: 2009
+            },
+            {
+                id: 62,
+                title: "O FLAUTISTA MISTERIOSO E OS RATOS DE HAMELIN",
+                author: "Braulio Tavares",
+                category: "Cordel",
+                description: "Com sextilhas rimadas e bem divertidas, Braulio Tavares conta a célebre lenda do flautista de Hamelin.",
+                year: 2011
+            },
+            {
+                id: 63,
+                title: "O GUARANI",
+                author: "Klévisson Viana",
+                category: "Cordel",
+                description: "Em 1857, José de Alencar escreveu O Guarani, obra clássica que o colocou em lugar de destaque.",
+                year: 2010
+            },
+            {
+                id: 64,
+                title: "HISTÓRIAS PRA BOI PENSAR",
+                author: "Rogério Andrade Barbosa",
+                category: "Cordel",
+                description: "A primeira lenda, 'As cabaças mágicas', apresenta uma história do povo chaga.",
+                year: 2006
+            },
+            {
+                id: 65,
+                title: "HISTÓRIAS NO VARAL",
+                author: "Vários autores",
+                category: "Cordel",
+                description: "Em todo o mundo e em todas as culturas, sempre existiu a tradição da literatura oral.",
+                year: 2012
+            },
+            {
+                id: 66,
+                title: "INSPIRAÇÃO NORDESTINA",
+                author: "Patativa do Assaré",
+                category: "Cordel",
+                description: "Inspiração nordestina é o primeiro livro de Patativa do Assaré.",
+                year: 1956
+            },
+            {
+                id: 67,
+                title: "LAMPIÃO E LANCELOTE",
+                author: "Fernando Vilela",
+                category: "Cordel",
+                description: "Um dos mais premiados livros infantis brasileiros agora de casa nova.",
+                year: 2006
+            },
+            {
+                id: 68,
+                title: "MACUNAIMA EM CORDEL",
+                author: "Vários autores",
+                category: "Cordel",
+                description: "Adaptação em cordel da obra de Mário de Andrade.",
+                year: 2011
+            },
+            {
+                id: 69,
+                title: "MEDO? EU, HEM?",
+                author: "Moreira de Acopiara",
+                category: "Cordel",
+                description: "O leitor vai se arrepiar e se divertir com os poemas de cordel presentes no livro.",
+                year: 2010
+            },
+            {
+                id: 70,
+                title: "A MEGERA DOMADA EM CORDEL",
+                author: "Vários autores",
+                category: "Cordel",
+                description: "Adaptação para o cordel da famosa comédia de William Shakespeare.",
+                year: 2009
+            },
+            {
+                id: 71,
+                title: "MEMÓRIAS PÓSTUMAS DE BRÁS CUBAS EM CORDEL",
+                author: "Vários autores",
+                category: "Cordel",
+                description: "Adaptação em cordel da obra de Machado de Assis.",
+                year: 2013
+            },
+            {
+                id: 72,
+                title: "MINHAS RIMAS DE CORDEL",
+                author: "César Obeid",
+                category: "Cordel",
+                description: "César Obeid não é nordestino mas mostra desenvoltura na criação de versos de cordel.",
+                year: 2012
+            },
+            {
+                id: 73,
+                title: "OS MISERÁVEIS EM CORDEL",
+                author: "Vários autores",
+                category: "Cordel",
+                description: "Adaptação em cordel da obra de Victor Hugo.",
+                year: 2014
+            },
+            {
+                id: 74,
+                title: "MITOS E LENDAS DO BRASIL",
+                author: "Vários autores",
+                category: "Cordel",
+                description: "O Brasil é riquíssimo em histórias e lendas.",
+                year: 2011
+            },
+            {
+                id: 75,
+                title: "A PEDRA DO MEIO DIA OU ARTUR E ISADORA",
+                author: "Bráulio Tavares",
+                category: "Cordel",
+                description: "Esta é a história de Artur, um andarilho valente que em sua caminhada salva a bela Isadora.",
+                year: 2007
+            },
+            {
+                id: 76,
+                title: "A PELEJA DO VIOLEIRO MAGRILIM COM A FORMOSA PRINCESA JEZEBEL",
+                author: "Bráulio Tavares",
+                category: "Cordel",
+                description: "Um rei mantinha em seu aquário três peixes que se alimentavam de carne humana.",
+                year: 2008
+            },
+            {
+                id: 77,
+                title: "PRIMAS EM CORDEL",
+                author: "Vários autores",
+                category: "Cordel",
+                description: "Doze obras de referência da literatura ocidental narradas em cordel.",
+                year: 2013
+            },
+            {
+                id: 78,
+                title: "SHAKESPEARE NAS RIMAS DO CORDEL",
+                author: "Vários autores",
+                category: "Cordel",
+                description: "A fim de quebrar a redoma que insiste em manter o poeta inglês distanciado do grande público.",
+                year: 2015
+            },
+            {
+                id: 79,
+                title: "ZÉ MELANCIA, JANGADAS E POESIA",
+                author: "Martine Kunz",
+                category: "Cordel",
+                description: "Zé Melancia, cujo nome de batismo era José da Rocha Freire, nasceu em Canoa Quebrada.",
+                year: 2009
+            },
+            {
+                id: 80,
+                title: "ZE VICENTE",
+                author: "Lindolfo Marques de Mesquita",
+                category: "Cordel",
+                description: "O paraense Lindolfo Marques de Mesquita, ou Zé Vicente, poeta cordelista emérito.",
+                year: 2010
+            },
+            {
+                id: 81,
+                title: "ZUMBI DOS PALMARES",
+                author: "Vários autores",
+                category: "Cordel",
+                description: "Este cordel é uma celebração do povo brasileiro.",
+                year: 2012
+            },
+            {
+                id: 82,
+                title: "Anayde Beiriz",
+                author: "Vários autores",
+                category: "Biografia",
+                description: "Conta a história de vida de Anayde Beiriz, uma das mulheres mais ousadas da Paraíba.",
+                year: 2008
+            },
+            {
+                id: 83,
+                title: "Angola Janga",
+                author: "Marcel D'Salete",
+                category: "Quadrinhos",
+                description: "Angola Janga, 'pequena Angola' ou, como dizem os livros de história, Palmares.",
+                year: 2017
+            },
+            {
+                id: 84,
+                title: "Anne Frank",
+                author: "Joseph Jacobson e Sidney Jacobson",
+                category: "Quadrinhos",
+                description: "A partir de intensa pesquisa e cuidadosa contextualização histórica.",
+                year: 2010
+            },
+            {
+                id: 85,
+                title: "O auto da barca do inferno",
+                author: "Laudo Ferreira",
+                category: "Quadrinhos",
+                description: "Laudo Ferreira mergulha na obra de Gil Vicente e dá vida às suas personagens.",
+                year: 2012
+            },
+            {
+                id: 86,
+                title: "As aventuras de Huckleberry Finn",
+                author: "Mark Twain",
+                category: "Literatura Estrangeira",
+                description: "Huckleberry Finn é um garoto cheio de coragem que desce o rio Mississippi em busca de aventuras.",
+                year: 1884
+            },
+            {
+                id: 87,
+                title: "As aventuras de Mark Twain",
+                author: "Robert Burleigh",
+                category: "Biografia",
+                description: "Tom Sawyer é um jovem aventureiro com um dom especial para se meter em encrencas.",
+                year: 2011
+            },
+            {
+                id: 88,
+                title: "Aya de Yopougon",
+                author: "Marguerite Abouet",
+                category: "Quadrinhos",
+                description: "Em Yop City, na Costa do Marfim, o que chama a atenção são as confusões de três amigas.",
+                year: 2005
+            },
+            {
+                id: 89,
+                title: "Beco do Rosário",
+                author: "Luiz Antônio",
+                category: "Quadrinhos",
+                description: "Porto Alegre, anos 1920, uma cidade em plena febre de modernização.",
+                year: 2014
+            },
+            {
+                id: 90,
+                title: "A cachoeira de Paulo Afonso",
+                author: "André Diniz",
+                category: "Quadrinhos",
+                description: "A cachoeira de Paulo Afonso é um poema presente na obra Os Escravos.",
+                year: 2013
+            },
+            {
+                id: 91,
+                title: "Cais do Porto",
+                author: "Brendda Maria",
+                category: "Quadrinhos",
+                description: "Acompanhamos as amigas Clara e Gi se reencontrando, por acaso, anos depois.",
+                year: 2016
+            },
+            {
+                id: 92,
+                title: "Carolina",
+                author: "João Pinheiro",
+                category: "Quadrinhos",
+                description: "A história de luta, fama e declínio de umas das mais marcantes vozes femininas da literatura brasileira.",
+                year: 2015
+            },
+            {
+                id: 93,
+                title: "Casa Grande & Senzala",
+                author: "Gilberto Freyre",
+                category: "Didáticos",
+                description: "São estudadas as características gerais da colonização portuguesa.",
+                year: 1933
+            },
+            {
+                id: 94,
+                title: "A causa secreta",
+                author: "Machado de Assis",
+                category: "Literatura Brasileira",
+                description: "Com incrível maestria, o autor constrói o perfil psicológico de Fortunato.",
+                year: 1885
+            },
+            {
+                id: 95,
+                title: "Crime e Castigo",
+                author: "Fiódor Dostoiévski",
+                category: "Literatura Estrangeira",
+                description: "Raskólnikov é um jovem que teve que abandonar os estudos por falta de dinheiro.",
+                year: 1866
+            },
+            {
+                id: 96,
+                title: "Cumbe",
+                author: "Marcelo D'Salete",
+                category: "Quadrinhos",
+                description: "Em Cumbe, Marcelo D'Salete retrata de forma inovadora a luta dos negros no Brasil colonial contra a escravidão.",
+                year: 2014
+            },
+            {
+                id: 97,
+                title: "Descobrindo um novo mundo",
+                author: "Vários autores",
+                category: "Quadrinhos",
+                description: "Entre o final da Idade Média e o início da Época Moderna, os europeus lançaram-se aos mares.",
+                year: 2012
+            },
+            {
+                id: 98,
+                title: "Desista e outras histórias de Franz Kafka",
+                author: "Peter Kuper",
+                category: "Quadrinhos",
+                description: "As nove histórias são muito bem representadas e os traços fortes de Peter Kuper.",
+                year: 2011
+            },
+            {
+                id: 99,
+                title: "A Divina Comédia",
+                author: "Dante Alighieri",
+                category: "Clássicos",
+                description: "A Divina Comédia em quadrinhos é a transposição para a linguagem da HQ do poema épico.",
+                year: 2010
+            },
+            {
+                id: 100,
+                title: "Dois irmãos",
+                author: "Fábio Moon e Gabriel Bá",
+                category: "Quadrinhos",
+                description: "O romance gráfico Dois irmãos é a versão em quadrinhos do consagrado romance homônimo de Milton Hatoum.",
+                year: 2015
+            },
+                        {
+                id: 101,
+                title: "Dom Casmurro",
+                author: "Machado de Assis",
+                category: "Literatura Brasileira",
+                description: "Nessa narrativa, Bento Santiago conta ao leitor sobre sua infância e a história do amor e das desventuras.",
+                year: 1899
+            },
+            {
+                id: 102,
+                title: "A escrava Isaura",
+                author: "Bernardo Guimarães",
+                category: "Literatura Brasileira",
+                description: "Isaura é filha de uma escrava negra e de um homem branco.",
+                year: 1875
+            },
+            {
+                id: 103,
+                title: "Frankenstein",
+                author: "Mary Shelley",
+                category: "Clássicos",
+                description: "Victor Frankenstein concluiu seu projeto. Depois de anos de estudos e dedicação.",
+                year: 1818
+            },
+            {
+                id: 104,
+                title: "Gandhi",
+                author: "Lewis Helfand",
+                category: "Biografia",
+                description: "Mohandas Karamchand Gandhi, mais conhecido por Mahatma, que no idioma de seu país, a Índia, significa Grande Alma.",
+                year: 2011
+            },
+            {
+                id: 105,
+                title: "Grande sertão Veredas",
+                author: "Eloar Guazzelli e Rodrigo Rosa",
+                category: "Quadrinhos",
+                description: "Nesta versão em quadrinhos, vencedora do prêmio HQ Mix.",
+                year: 2017
+            },
+            {
+                id: 106,
+                title: "A guerra do reino divino",
+                author: "Jô Oliveira",
+                category: "Quadrinhos",
+                description: "Trata-se de um quadrinho épico de Jô Oliveira, baseado em fatos reais que marcaram a história.",
+                year: 2013
+            },
+            {
+                id: 107,
+                title: "A História do mundo em quadrinhos",
+                author: "Larry Ginnick",
+                category: "Quadrinhos",
+                description: "Você já se perguntou qual a origem das guerras no Oriente Médio.",
+                year: 2012
+            },
+            {
+                id: 108,
+                title: "Iracema",
+                author: "José de Alencar",
+                category: "Literatura Brasileira",
+                description: "Adaptação do romance Iracema, de José de Alencar, originalmente publicado em 1865.",
+                year: 2014
+            },
+            {
+                id: 109,
+                title: "Irmãos pretos",
+                author: "Lisa Tetzner",
+                category: "Literatura Estrangeira",
+                description: "O romance se baseia na história verdadeira de Giorgio, um adolescente de 13 anos.",
+                year: 1941
+            },
+            {
+                id: 110,
+                title: "Lampião",
+                author: "Ataíde Braz",
+                category: "Quadrinhos",
+                description: "Narra os últimos dias da vida de Virgulino Ferreira, o Lampião.",
+                year: 2012
+            },
+            {
+                id: 111,
+                title: "Lucíola",
+                author: "Maria Helena Rouanet e Ricardo Rocha",
+                category: "Quadrinhos",
+                description: "Um dos maiores clássicos da literatura brasileira, Lucíola narra o encontro entre o jovem Paulo.",
+                year: 2015
+            },
+            {
+                id: 112,
+                title: "Mapinguari",
+                author: "Alex Mir",
+                category: "Quadrinhos",
+                description: "Ao retornar ao seu povoado natal, depois de anos longe de casa, José descobre a história de sua família.",
+                year: 2016
+            },
+            {
+                id: 113,
+                title: "Memórias de um sargento de milícias",
+                author: "Manuel Antônio de Almeida",
+                category: "Literatura Brasileira",
+                description: "Leonardo resolve tudo na malandragem. Não se interessa nem pelos estudos nem pelo trabalho.",
+                year: 1854
+            },
+            {
+                id: 114,
+                title: "Mesa para dois",
+                author: "Fábio Moon e Gabriel Bá",
+                category: "Quadrinhos",
+                description: "Depois do elogiado 10 Pãezinhos: crítica, os premiados gêmeos Fábio Moon e Gabriel Bá lançam Mesa para Dois.",
+                year: 2014
+            },
+            {
+                id: 115,
+                title: "Minas da várzea",
+                author: "Vários autores",
+                category: "Quadrinhos",
+                description: "Conta a história de dois times de futebol feminino amador do extremo sul da capital.",
+                year: 2017
+            },
+            {
+                id: 116,
+                title: "Moby Dick",
+                author: "Herman Melville",
+                category: "Clássicos",
+                description: "Após hospedar-se numa pousada de Massachusets, a fim de se aventurar na caça às baleias.",
+                year: 1851
+            },
+            {
+                id: 117,
+                title: "O Nariz O retrato",
+                author: "Nicolai Gógol",
+                category: "Literatura Estrangeira",
+                description: "Esta primorosa adaptação para os quadrinhos apresenta duas obras de Nicolai Gógol.",
+                year: 2013
+            },
+            {
+                id: 118,
+                title: "Nelson Mandela",
+                author: "Lewis Helfand e Sankha Banerjee",
+                category: "Biografia",
+                description: "Lewis Helfand e Sankha Banerjee apresentam uma biografia em quadrinhos de Nelson Mandela.",
+                year: 2014
+            },
+            {
+                id: 119,
+                title: "Noite na taverna",
+                author: "Álvares de Azevedo",
+                category: "Literatura Brasileira",
+                description: "Um grupo de boêmios em uma taverna filosofando sobre a vida.",
+                year: 2015
+            },
+            {
+                id: 120,
+                title: "Odisseia",
+                author: "Homero",
+                category: "Clássicos",
+                description: "É uma epopeia, um poema longo que narra os feitos extraordinários de heróis.",
+                year: 2012
+            },
+            {
+                id: 121,
+                title: "Pequenos Milagres",
+                author: "Yitta Halberstam e Judith Leventhal",
+                category: "Literatura Estrangeira",
+                description: "Um avião cujo embarque você perdeu sofre um acidente.",
+                year: 1997
+            },
+            {
+                id: 122,
+                title: "Quilombo Orum Aiê",
+                author: "Marcelo D'Salete",
+                category: "Quadrinhos",
+                description: "Esse é para quem adora quadrinhos! Capivara é o apelido de um menino escravo.",
+                year: 2018
+            },
+            {
+                id: 123,
+                title: "ALUÍSIO AZEVEDO - O CORTIÇO",
+                author: "Aluísio Azevedo",
+                category: "Literatura Brasileira",
+                description: "Publicado em 1890, O Cortiço põe olhos sobre os marginalizados.",
+                year: 1890
+            },
+            {
+                id: 124,
+                title: "O CORUJA",
+                author: "Aluísio Azevedo",
+                category: "Literatura Brasileira",
+                description: "Esta obra, embora não se constitua como um romance de formação.",
+                year: 1890
+            },
+            {
+                id: 125,
+                title: "CASA DE PENSÃO",
+                author: "Aluísio Azevedo",
+                category: "Literatura Brasileira",
+                description: "Amâncio é um jovem do interior de família rica que deixa o Maranhão para estudar medicina na corte.",
+                year: 1884
+            },
+            {
+                id: 126,
+                title: "O MULATO",
+                author: "Aluísio Azevedo",
+                category: "Literatura Brasileira",
+                description: "A trama se passa em São Luís, no Maranhão e segue a vida de Raimundo.",
+                year: 1881
+            },
+            {
+                id: 127,
+                title: "ÁLVARES DE AZEVEDO - NOITE NA TAVERNA",
+                author: "Álvares de Azevedo",
+                category: "Literatura Brasileira",
+                description: "Foi publicada postumamente, em 1855; três anos após a morte de Azevedo.",
+                year: 1855
+            },
+            {
+                id: 128,
+                title: "ANTONIO DE ALCÂNTARA MACHADO - BRÁS, BEXIGA E BARRA FUNDA",
+                author: "Antonio de Alcântara Machado",
+                category: "Literatura Brasileira",
+                description: "Coletânea de contos do escritor modernista Antônio de Alcântara Machado.",
+                year: 1927
+            },
+            {
+                id: 129,
+                title: "CAMILO CASTELO BRANCO - AMOR DE SALVAÇÃO",
+                author: "Camilo Castelo Branco",
+                category: "Literatura Estrangeira",
+                description: "É uma história de paixão e descobertas, o autor penetra nos sentimentos humanos.",
+                year: 1864
+            },
+            {
+                id: 130,
+                title: "AMOR DE PERDIÇÃO",
+                author: "Camilo Castelo Branco",
+                category: "Literatura Estrangeira",
+                description: "Escrita em 1861 e publicada em 1862. É considerada a obra principal do escritor.",
+                year: 1862
+            },
+            {
+                id: 131,
+                title: "EÇA DE QUEIRÓS - A CIDADE E AS SERRAS",
+                author: "Eça de Queirós",
+                category: "Literatura Estrangeira",
+                description: "Obra publicada em 1901, retrata o contraste entre o dia a dia frenético da metrópole e a vida simples do campo.",
+                year: 1901
+            },
+            {
+                id: 132,
+                title: "O PRIMO BASÍLIO",
+                author: "Eça de Queirós",
+                category: "Literatura Estrangeira",
+                description: "Neste livro, faz uma crítica severa à sociedade lisboeta do século XIX.",
+                year: 1878
+            },
+            {
+                id: 133,
+                title: "OS MAIAS",
+                author: "Eça de Queirós",
+                category: "Literatura Estrangeira",
+                description: "Os Maias envolve o leitor na irresistível atmosfera da Lisboa de fins do século XIX.",
+                year: 1888
+            },
+            {
+                id: 134,
+                title: "A RELÍQUIA",
+                author: "Eça de Queirós",
+                category: "Literatura Estrangeira",
+                description: "Em 1875, nas vésperas de Santo Antônio, uma desilusão de incomparável amargura abalou o meu ser.",
+                year: 1887
+            },
+            {
+                id: 135,
+                title: "ERICO VERISSIMO - UM CERTO CAPITÃO RODRIGO",
+                author: "Erico Verissimo",
+                category: "Literatura Brasileira",
+                description: "Quando Rodrigo Cambará surge no povoado de Santa Fé, em outubro de 1828.",
+                year: 1949
+            },
+            {
+                id: 136,
+                title: "CLARISSA",
+                author: "Erico Verissimo",
+                category: "Literatura Brasileira",
+                description: "Clarissa vem de uma cidadezinha do interior para estudar na capital, Porto Alegre.",
+                year: 1933
+            },
+            {
+                id: 137,
+                title: "INCIDENTE EM ANTARES",
+                author: "Erico Verissimo",
+                category: "Literatura Brasileira",
+                description: "Em dezembro de 1963, uma sexta-feira 13, a matriarca Quitéria Campolargo arregala os olhos em sua tumba.",
+                year: 1971
+            },
+            {
+                id: 138,
+                title: "OLHAI OS LÍRIOS DO CAMPO",
+                author: "Erico Verissimo",
+                category: "Literatura Brasileira",
+                description: "O livro narra a história de Eugênio Fontes, que, com muito sacrifício, se forma em Medicina.",
+                year: 1938
+            },
+            {
+                id: 139,
+                title: "GRACILIANO RAMOS - ALEXANDRE E OUTROS HERÓIS",
+                author: "Graciliano Ramos",
+                category: "Literatura Brasileira",
+                description: "Alexandre e Outros Heróis é o nome que foi dado à reunião de três obras.",
+                year: 1944
+            },
+            {
+                id: 140,
+                title: "ANGÚSTIA",
+                author: "Graciliano Ramos",
+                category: "Literatura Brasileira",
+                description: "A genialidade literária de Graciliano Ramos mergulha na mente atormentada de Luís da Silva.",
+                year: 1936
+            },
+            {
+                id: 141,
+                title: "CAETÉS",
+                author: "Graciliano Ramos",
+                category: "Literatura Brasileira",
+                description: "Lançado em 1933 e narrado na primeira pessoa pelo protagonista, João Valério.",
+                year: 1933
+            },
+            {
+                id: 142,
+                title: "MEMÓRIAS DO CÁRCERE",
+                author: "Graciliano Ramos",
+                category: "Literatura Brasileira",
+                description: "No livro, Graciliano descreve a companhia dos mais variados tipos encontrados entre os presos políticos.",
+                year: 1953
+            },
+            {
+                id: 143,
+                title: "VIDAS SECAS",
+                author: "Graciliano Ramos",
+                category: "Literatura Brasileira",
+                description: "Lançado originalmente em 1938, Vidas secas retrata a vida miserável de uma família de retirantes sertanejos.",
+                year: 1938
+            },
+            {
+                id: 144,
+                title: "IGNÁCIO DE LOYOLA BRANDÃO - NÃO VERÁS PAÍS NENHUM",
+                author: "Ignácio de Loyola Brandão",
+                category: "Literatura Brasileira",
+                description: "Não verás país nenhum, publicado pela primeira vez em 1981, permanece mais contemporâneo do que nunca.",
+                year: 1981
+            },
+            {
+                id: 145,
+                title: "JOAQUIM MANUEL DE MACEDO - O MOÇO LOIRO",
+                author: "Joaquim Manuel de Macedo",
+                category: "Literatura Brasileira",
+                description: "O Moço Loiro foi o segundo romance de Joaquim Manuel de Macedo.",
+                year: 1845
+            },
+            {
+                id: 146,
+                title: "A MORENINHA",
+                author: "Joaquim Manuel de Macedo",
+                category: "Literatura Brasileira",
+                description: "Quatro estudantes se hospedarão na casa da avó de Filipe no feriado.",
+                year: 1844
+            },
+            {
+                id: 147,
+                title: "JORGE AMADO - CAPITÃES DE AREIA",
+                author: "Jorge Amado",
+                category: "Literatura Brasileira",
+                description: "Trata-se de um romance moderno de denúncia social com o tema centrado na miséria dos meninos de rua.",
+                year: 1937
+            },
+            {
+                id: 148,
+                title: "O COMPADRE DE OGUM",
+                author: "Jorge Amado",
+                category: "Literatura Brasileira",
+                description: "Publicado em 1964, foi escrito por Jorge Amado. Faz parte da obra Os Pastores da Noite.",
+                year: 1964
+            },
+            {
+                id: 149,
+                title: "MAR MORTO",
+                author: "Jorge Amado",
+                category: "Literatura Brasileira",
+                description: "Escrito em 1936, quando o autor tinha apenas 24 anos, Mar morto conta as histórias da beira do cais da Bahia.",
+                year: 1936
+            },
+            {
+                id: 150,
+                title: "A MORTE E A MORTE DE QUINCAS BERRO D'AGUA",
+                author: "Jorge Amado",
+                category: "Literatura Brasileira",
+                description: "Saí da leitura dessa extraordinária novela com a mesma sensação que tive ao ler os grandes romances russos.",
+                year: 1959
+            },
+            {
+                id: 151,
+                title: "TENDA DOS MILAGRES",
+                author: "Jorge Amado",
+                category: "Literatura Brasileira",
+                description: "Sobre o pano de fundo da discussão das teorias raciais que infestaram os meios intelectuais brasileiros no começo do século XX.",
+                year: 1969
+            },
+            {
+                id: 152,
+                title: "TEREZA BATISTA CANSADA DE GUERRA",
+                author: "Jorge Amado",
+                category: "Literatura Brasileira",
+                description: "No sertão de Sergipe, perto da fronteira com a Bahia, aos treze anos incompletos a órfã Tereza Batista é vendida pela tia a um fazendeiro pedófilo e brutal.",
+                year: 1972
+            },
+            {
+                id: 153,
+                title: "TERRAS DO SEM-FIM",
+                author: "Jorge Amado",
+                category: "Literatura Brasileira",
+                description: "Durante a guerra pela posse da terra na região cacaueira do sul da Bahia, os irmãos Badaró enfrentam o coronel Horácio da Silveira.",
+                year: 1943
+            },
+            {
+                id: 154,
+                title: "TOCAIA GRANDE",
+                author: "Jorge Amado",
+                category: "Literatura Brasileira",
+                description: "Publicado em 1984, Tocaia Grande descreve o processo de formação de uma cidade nordestina, nascida sob o signo da violência e da disputa de terras.",
+                year: 1984
+            },
+            {
+                id: 155,
+                title: "JOSÉ DE ALENCAR - CINCO MINUTOS",
+                author: "José de Alencar",
+                category: "Literatura Brasileira",
+                description: "Estão localizados entre os romances urbanos de José de Alencar e descrevem de maneira precisa o dia-a-dia, as aflições e os preconceitos da classe média brasileira.",
+                year: 1856
+            },
+            {
+                id: 156,
+                title: "O GUARANI",
+                author: "José de Alencar",
+                category: "Literatura Brasileira",
+                description: "Escrito em 1857, este é um dos mais importantes romances brasileiros, tendo inspirado a ópera homônima do compositor Carlos Gomes.",
+                year: 1857
+            },
+            {
+                id: 157,
+                title: "IRACEMA",
+                author: "José de Alencar",
+                category: "Literatura Brasileira",
+                description: "Obra da fase indianista de José de Alencar, Iracema é um regalo do autor à expressão nacionalista que estava em voga no século XIX.",
+                year: 1865
+            },
+            {
+                id: 158,
+                title: "LUCÍOLA",
+                author: "José de Alencar",
+                category: "Literatura Brasileira",
+                description: "Publicado em 1862, é uma obra de crítica à sociedade da então capital do Império do Brasil, o Rio de Janeiro.",
+                year: 1862
+            },
+            {
+                id: 159,
+                title: "SENHORA",
+                author: "José de Alencar",
+                category: "Literatura Brasileira",
+                description: "É um dos últimos romances escritos por José de Alencar. Publicado em 1874, em meio ao Romantismo do século XIX.",
+                year: 1874
+            },
+            {
+                id: 160,
+                title: "UBIRAJARA",
+                author: "José de Alencar",
+                category: "Literatura Brasileira",
+                description: "Publicada em 1874, 'Ubirajara' completa uma trilogia de romances indianistas propostos por José de Alencar.",
+                year: 1874
+            },
+            {
+                id: 161,
+                title: "A VIUVINHA",
+                author: "José de Alencar",
+                category: "Literatura Brasileira",
+                description: "Publicada em 1874, 'Ubirajara' completa uma trilogia de romances indianistas propostos por José de Alencar.",
+                year: 1874
+            },
+            {
+                id: 162,
+                title: "JOSÉ AMÉRICO DE ALMEIDA - A BAGACEIRA",
+                author: "José Américo de Almeida",
+                category: "Literatura Brasileira",
+                description: "A história se passa entre 1898 e 1915, os dois períodos de seca.",
+                year: 1928
+            },
+            {
+                id: 163,
+                title: "JOSÉ LINS DO REGO - FOGO MORTO",
+                author: "José Lins do Rego",
+                category: "Literatura Brasileira",
+                description: "Lançado em 1943, Fogo morto é considerado por muitos críticos a obra-prima de José Lins do Rego.",
+                year: 1943
+            },
+            {
+                id: 164,
+                title: "MENINO DE ENGENHO",
+                author: "José Lins do Rego",
+                category: "Literatura Brasileira",
+                description: "Primeiro romance de de José Lins do Rego, Menino de engenho é narrativa cativante composta pelas aventuras e desventuras da meninice de Carlos.",
+                year: 1932
+            },
+            {
+                id: 165,
+                title: "PEDRA BONITA",
+                author: "José Lins do Rego",
+                category: "Literatura Brasileira",
+                description: "Publicado pela primeira vez em 1938, 6 anos após o lançamento de Menino de Engenho.",
+                year: 1938
+            },
+            {
+                id: 166,
+                title: "JOSÉ SARAMAGO - ENSAIO SOBRE A CEGUEIRA",
+                author: "José Saramago",
+                category: "Literatura Estrangeira",
+                description: "Um motorista parado no sinal se descobre subitamente cego. É o primeiro caso de uma 'treva branca' que logo se espalha incontrolavelmente.",
+                year: 1995
+            },
+            {
+                id: 167,
+                title: "MEMORIAL DO CONVENTO",
+                author: "José Saramago",
+                category: "Literatura Estrangeira",
+                description: "No epicentro desta história está a construção do Palácio Nacional de Mafra, também conhecido como Convento.",
+                year: 1982
+            },
+            {
+                id: 168,
+                title: "LIMA BARRETO - CLARA DOS ANJOS",
+                author: "Lima Barreto",
+                category: "Literatura Brasileira",
+                description: "No início de 1922, Lima Barreto anunciava na imprensa do Rio de Janeiro que seu novo romance, intitulado Clara dos Anjos.",
+                year: 1948
+            },
+            {
+                id: 169,
+                title: "CEMITÉRIO DOS VIVOS E DIÁRIO DO HOSPÍCIO",
+                author: "Lima Barreto",
+                category: "Literatura Brasileira",
+                description: "Houve quem perguntasse: bebemos porque já somos loucos ou ficamos loucos porque bebemos?",
+                year: 1953
+            },
+            {
+                id: 170,
+                title: "TRISTE FIM DE POLICARPO QUARESMA",
+                author: "Lima Barreto",
+                category: "Literatura Brasileira",
+                description: "No fim do século XIX, um major nacionalista, defensor da língua tupi e seguidor de manuais de agricultura.",
+                year: 1911
+            },
+            {
+                id: 171,
+                title: "MACHADO DE ASSIS - O ALIENISTA",
+                author: "Machado de Assis",
+                category: "Literatura Brasileira",
+                description: "O Alienista é um clássico literário sobre a psiquê. Qual é o limite entre a loucura e a sanidade?",
+                year: 1882
+            },
+            {
+                id: 172,
+                title: "CONTOS E CRÔNICAS",
+                author: "Machado de Assis",
+                category: "Literatura Brasileira",
+                description: "Considerado por muitos estudiosos como o maior escritor brasileiro de todos os tempos.",
+                year: 2019
+            },
+            {
+                id: 173,
+                title: "CONTOS FLUMINENSES",
+                author: "Machado de Assis",
+                category: "Literatura Brasileira",
+                description: "Nas páginas deste livro, o leitor encontrará o mesmo observador da alma e das contradições humanas.",
+                year: 1870
+            },
+            {
+                id: 174,
+                title: "DOM CASMURRO",
+                author: "Machado de Assis",
+                category: "Literatura Brasileira",
+                description: "Em Dom Casmurro, o narrador Bento Santiago retoma a infância que passou na Rua de Matacavalos.",
+                year: 1899
+            },
+            {
+                id: 175,
+                title: "HELENA",
+                author: "Machado de Assis",
+                category: "Literatura Brasileira",
+                description: "O conselheiro Vale morreu às sete horas da noite de 25 de abril de 1859.",
+                year: 1876
+            },
+            {
+                id: 176,
+                title: "HISTÓRIAS SEM DATA",
+                author: "Machado de Assis",
+                category: "Literatura Brasileira",
+                description: "Histórias Sem Data, publicado originalmente em 1884 reúne contos de Machado de Assis.",
+                year: 1884
+            },
+            {
+                id: 177,
+                title: "HISTÓRIAS DA MEIA NOITE",
+                author: "Machado de Assis",
+                category: "Literatura Brasileira",
+                description: "Publicado em 1873, Histórias da meia-noite foi o segundo livro de contos organizado em vida por Machado de Assis.",
+                year: 1873
+            },
+            {
+                id: 178,
+                title: "A MÃO E A LUVA",
+                author: "Machado de Assis",
+                category: "Literatura Brasileira",
+                description: "Segundo romance escrito por Machado de Assis, publicado em 1874.",
+                year: 1874
+            },
+            {
+                id: 179,
+                title: "MEMÓRIAS PÓSTUMAS DE BRÁS CUBAS",
+                author: "Machado de Assis",
+                category: "Literatura Brasileira",
+                description: "Segundo romance escrito por Machado de Assis, publicado em 1874.",
+                year: 1881
+            },
+            {
+                id: 180,
+                title: "PAPÉIS AVULSOS",
+                author: "Machado de Assis",
+                category: "Literatura Brasileira",
+                description: "Primeiro livro de contos publicado por Machado de Assis após o lançamento de Memórias póstumas de Brás Cubas.",
+                year: 1882
+            },
+            {
+                id: 181,
+                title: "MACHADO DE ASSIS PARA PRINCIPIANTES",
+                author: "Machado de Assis",
+                category: "Literatura Brasileira",
+                description: "Para introduzir o jovem leitor na obra de Machado de Assis, este livro reúne trechos de romances e crônicas.",
+                year: 2019
+            },
+            {
+                id: 182,
+                title: "QUINCAS BORBA",
+                author: "Machado de Assis",
+                category: "Literatura Brasileira",
+                description: "Publicados como folhetim na revista A Estação entre 1886 e 1891.",
+                year: 1891
+            },
+            {
+                id: 183,
+                title: "RESSURREIÇÃO",
+                author: "Machado de Assis",
+                category: "Literatura Brasileira",
+                description: "Este é um romance que marcará época na nossa literatura e será para Machado de Assim o começo de uma carreira triunfal.",
+                year: 1872
+            },
+            {
+                id: 184,
+                title: "VÁRIAS HISTÓRIAS",
+                author: "Machado de Assis",
+                category: "Literatura Brasileira",
+                description: "Esta é uma coletânea de algumas de suas mais famosas obras do gênero.",
+                year: 1896
+            },
+            {
+                id: 185,
+                title: "MANUEL ANTONIO DE ALMEIDA - MEMÓRIAS DE UM SARGENTO DE MILÍCIAS",
+                author: "Manuel Antonio de Almeida",
+                category: "Literatura Brasileira",
+                description: "Apresenta uma galeria de personagens dos mais diferentes tipos.",
+                year: 1854
+            },
+            {
+                id: 186,
+                title: "OSWALD DE ANDRADE - MEMÓRIAS SENTIMENTAIS DE JOÃO RIBAMAR",
+                author: "Oswald de Andrade",
+                category: "Literatura Brasileira",
+                description: "Desde sua publicação, em 1924, Memórias sentimentais de João Miramar vem sendo saudado como um dos textos mais instigantes da prosa brasileira.",
+                year: 1924
+            },
+            {
+                id: 187,
+                title: "RACHEL DE QUEIROZ - DÔRA DORALINA",
+                author: "Rachel de Queiroz",
+                category: "Literatura Brasileira",
+                description: "Narra a história de Maria das Dores, viúva recente de um casamento de conveniência.",
+                year: 1975
+            },
+            {
+                id: 188,
+                title: "O QUINZE",
+                author: "Rachel de Queiroz",
+                category: "Literatura Brasileira",
+                description: "Lançado originalmente em 1930, em edição financiada pela própria autora.",
+                year: 1930
+            },
+            {
+                id: 189,
+                title: "AS TRÊS MARIAS",
+                author: "Rachel de Queiroz",
+                category: "Literatura Brasileira",
+                description: "Romance de Rachel de Queiroz, publicado originalmente em 1939.",
+                year: 1939
+            },
+            {
+                id: 190,
+                title: "RAUL POMPEIA - O ATENEU",
+                author: "Raul Pompeia",
+                category: "Literatura Brasileira",
+                description: "Sérgio, agora com cerca de trinta anos, é o narrador do livro.",
+                year: 1888
+            },
+            {
+                id: 191,
+                title: "VISCONDE DE TAUNAY - INOCÊNCIA",
+                author: "Visconde de Taunay",
+                category: "Literatura Brasileira",
+                description: "Obra publicada em 1872, é cercada de sentimentos e de um terno olhar sobre as paisagens do sertão.",
+                year: 1872
+            },
+            {
+                id: 192,
+                title: "Alexandre de Gusmão- Um Diplomata na Corte",
+                author: "Vários autores",
+                category: "Biografia",
+                description: "Alexandre de Gusmão foi um brasileiro ilustre. Ele foi um diplomata talentoso, um pensador brilhante e um patriota dedicado.",
+                year: 2002
+            },
+            {
+                id: 193,
+                title: "O mundo de Anne Frank",
+                author: "Janny van der Molen",
+                category: "Biografia",
+                description: "O diário em que a jovem Anne Frank relata os dias vividos num esconderijo em Amsterdã com a família durante a Segunda Guerra Mundial.",
+                year: 2010
+            },
+            {
+                id: 194,
+                title: "O Diário de Anne Frank",
+                author: "Anne Frank",
+                category: "Biografia",
+                description: "O diário de Anne Frank é um dos livros mais lidos do mundo.",
+                year: 1947
+            },
+            {
+                id: 195,
+                title: "Autobiografia de uma autista",
+                author: "Temple Grandin",
+                category: "Biografia",
+                description: "Autobiografia da engenheira e bióloga Temple Grandin, que bem cedo foi diagnosticada como autista.",
+                year: 1986
+            },
+            {
+                id: 196,
+                title: "Casa dos Braga memória de infância",
+                author: "Rubem Braga",
+                category: "Literatura Brasileira",
+                description: "Muitos críticos reputam Rubem Braga como aquele que elevou a crônica à categoria de gênero literário.",
+                year: 1975
+            },
+            {
+                id: 197,
+                title: "Cem dias entre céu e mar",
+                author: "Amyr Klink",
+                category: "Biografia",
+                description: "Navegando ao lado dos peixes, entretendo conversas com gaivotas e tubarões.",
+                year: 1985
+            },
+            {
+                id: 198,
+                title: "Ernesto Che Guevara",
+                author: "Ernesto Che Guevara",
+                category: "Biografia",
+                description: "Elaborado por Ernesto Che Guevara, em forma narrativa, graças às suas anotações detalhadas.",
+                year: 1993
+            },
+            {
+                id: 199,
+                title: "Górki infância",
+                author: "Maksim Górki",
+                category: "Literatura Estrangeira",
+                description: "O primeiro volume da trilogia autobiográfica de Maksim Górki.",
+                year: 1913
+            },
+            {
+                id: 200,
+                title: "Ingleses no Brasil",
+                author: "Vários autores",
+                category: "Didáticos",
+                description: "Reúne doze narrativas de viagem, de diversos autores, todas inéditas em livro.",
+                year: 2016
+            },
+                        {
+                id: 201,
+                title: "A autobiografia do poeta escravo Juan Francisco Manzano",
+                author: "Juan Francisco Manzano",
+                category: "Biografia",
+                description: "A longa e terrível história da escravidão nas Américas tem poucos relatos diretos.",
+                year: 2018
+            },
+            {
+                id: 202,
+                title: "Léo, o pardo",
+                author: "Rinaldo de Fernandes",
+                category: "Literatura Brasileira",
+                description: "É um livro bonito, comovente e carregado de experiência de vida.",
+                year: 2005
+            },
+            {
+                id: 203,
+                title: "D. Leopoldina a história não contada",
+                author: "Paulo Rezzutti",
+                category: "Biografia",
+                description: "Depois de desmitificar a figura de D. Pedro, a coleção 'A História não Contada' apresenta a imperatriz D. Leopoldina.",
+                year: 2017
+            },
+            {
+                id: 204,
+                title: "Eu sou Malala",
+                author: "Malala Yousafzai",
+                category: "Biografia",
+                description: "Quando o Talibã tomou controle do vale do Swat, uma menina levantou a voz.",
+                year: 2013
+            },
+            {
+                id: 205,
+                title: "Meus desacontecimentos",
+                author: "Eliane Brum",
+                category: "Biografia",
+                description: "A menina que flertava com a morte conta como foi salva pela palavra escrita.",
+                year: 2014
+            },
+            {
+                id: 206,
+                title: "Na minha pele",
+                author: "Lázaro Ramos",
+                category: "Biografia",
+                description: "Movido pelo desejo de viver num mundo em que a pluralidade cultural, racial, étnica e social seja vista como um valor positivo.",
+                year: 2017
+            },
+            {
+                id: 207,
+                title: "Nascidos na escravidão",
+                author: "Vários autores",
+                category: "Didáticos",
+                description: "Inéditas no país, aqui estão reunidas narrativas de 204 ex-escravizados norte-americanos.",
+                year: 2019
+            },
+            {
+                id: 208,
+                title: "Nossa casa está em chamas",
+                author: "Greta Thunberg",
+                category: "Biografia",
+                description: "Nossa casa está em chamas: Ninguém é pequeno demais para fazer a diferença é o livro transformador da jovem ativista sueca.",
+                year: 2020
+            },
+            {
+                id: 209,
+                title: "Olga",
+                author: "Fernando Morais",
+                category: "Biografia",
+                description: "Nos últimos anos, poucas obras alcançaram no Brasil sucesso tão estrondoso quanto esta biografia de Olga Benario Prestes.",
+                year: 1985
+            },
+            {
+                id: 210,
+                title: "Caminhando com as próprias pernas PAUÊ",
+                author: "Paulo Eduardo Chieffi Aagaard",
+                category: "Biografia",
+                description: "Em junho de 2000, aos 18 anos, o jovem Paulo Eduardo Chieffi Aagaard começou a encarar o maior desafio de sua vida.",
+                year: 2008
+            },
+            {
+                id: 211,
+                title: "D. Pedro II",
+                author: "Paulo Rezzutti",
+                category: "Biografia",
+                description: "Em D. Pedro II: a história não contada, Paulo Rezzutti nos convida a mergulhar na vida de um dos mais enigmáticos governantes.",
+                year: 2019
+            },
+            {
+                id: 212,
+                title: "Pelos olhos de minha mãe",
+                author: "Laura Huzak",
+                category: "Biografia",
+                description: "Esse livro é um convite para relembrar a vida e a obra de Iolanda Huzak.",
+                year: 2015
+            },
+            {
+                id: 213,
+                title: "Perdidos no mar",
+                author: "Deborah Scaling Kiley",
+                category: "Biografia",
+                description: "Um professor, um encanador, um empresário, um filho de pastor, um desempregado e um ladrão.",
+                year: 1986
+            },
+            {
+                id: 214,
+                title: "Quando o amor transpõe o oceano",
+                author: "Winifred Walker",
+                category: "Biografia",
+                description: "Este livro é uma autobiografia de Winifred, onde ela conta a sua vida na ilha de Santa Helena.",
+                year: 1978
+            },
+            {
+                id: 215,
+                title: "O que é isso companheiro?",
+                author: "Fernando Gabeira",
+                category: "Biografia",
+                description: "Documento histórico – esta seria a melhor maneira de classificar a narrativa.",
+                year: 1979
+            },
+            {
+                id: 216,
+                title: "Queria brincar de mudar meu destino",
+                author: "Gilvã Mendes",
+                category: "Biografia",
+                description: "Esse livro é a história de um amor quase impossível entre um jovem e a poesia.",
+                year: 2009
+            },
+            {
+                id: 217,
+                title: "Diários de Raqqa",
+                author: "Samer",
+                category: "Biografia",
+                description: "Diários de Raqqa conta a história real de Samer, hoje jurado de morte pelo Estado Islâmico.",
+                year: 2017
+            },
+            {
+                id: 218,
+                title: "Racionais- sobrevivendo no inferno",
+                author: "Racionais MC's",
+                category: "Poesia",
+                description: "A virada para os anos 1990, os Racionais MC's emergiram como um dos mais importantes acontecimentos da cultura brasileira.",
+                year: 1997
+            },
+            {
+                id: 219,
+                title: "Restart coração na mão",
+                author: "Fátima Gigliotti",
+                category: "Biografia",
+                description: "Durante quatro meses, a jornalista Fátima Gigliotti esquadrinhou a vida de Pe Lanza, Pe Lu, Thomas e Koba.",
+                year: 2011
+            },
+            {
+                id: 220,
+                title: "Travessia memorial de um contador de histórias",
+                author: "Francisco Gregório da Silva Filho",
+                category: "Biografia",
+                description: "Por meio de uma narrativa inspiradora, acompanhamos as dificuldades encontradas pelo protagonista.",
+                year: 2018
+            },
+            {
+                id: 221,
+                title: "Açucar Amargo",
+                author: "Luiz Puntel",
+                category: "Literatura Brasileira",
+                description: "As dolorosas descobertas de Marta que é expulsa com a família da terra em que trabalhada.",
+                year: 1997
+            },
+            {
+                id: 222,
+                title: "Adinkra, meu pai",
+                author: "Cristiano Wapichana",
+                category: "Literatura Brasileira",
+                description: "História que fala das tradições africanas, de magia e do amor de um filho por seu misterioso pai.",
+                year: 2008
+            },
+            {
+                id: 223,
+                title: "O Agito de Pilar no Egito",
+                author: "Flávia Lins e Silva",
+                category: "Infantojuvenil",
+                description: "Em suas novas aventuras, a jovem Pilar embarca em uma viagem fantástica no tempo e no espaço para o Egito antigo.",
+                year: 2015
+            },
+            {
+                id: 224,
+                title: "Ainda uma vez adeus!",
+                author: "Lúcia Machado de Almeida",
+                category: "Literatura Brasileira",
+                description: "A romântica vida de Gonçalves Dias.",
+                year: 1976
+            },
+            {
+                id: 225,
+                title: "Aisja",
+                author: "Júlio Emílio Braz",
+                category: "Infantojuvenil",
+                description: "Uma história de encontro e amizade entre uma menina e um sultão.",
+                year: 2004
+            },
+            {
+                id: 226,
+                title: "O amor que o sol proibiu",
+                author: "Antônio Torres",
+                category: "Literatura Brasileira",
+                description: "Segundo a tradição, plebeus não podiam levantar os olhos para uma princesa.",
+                year: 2007
+            },
+            {
+                id: 227,
+                title: "Aldabra",
+                author: "Silvana de Menezes",
+                category: "Infantojuvenil",
+                description: "A avó de Elisa sempre foi sábia. Quando envelheceu, já carregava consigo o doce fardo da sabedoria.",
+                year: 2011
+            },
+            {
+                id: 228,
+                title: "A Aldeia Sagrada",
+                author: "Lúcia Hiratsuka",
+                category: "Infantojuvenil",
+                description: "Fugindo da seca do sertão baiano, Didico descobre o arraial de Canudos, em 1897.",
+                year: 2009
+            },
+            {
+                id: 229,
+                title: "Aleijadinho- Diários descobertos",
+                author: "José Eduardo Gonçalves",
+                category: "Biografia",
+                description: "Biografia romanceada de Aleijadinho baseada em diários recém-descobertos.",
+                year: 2013
+            },
+            {
+                id: 230,
+                title: "Aleijado",
+                author: "Caio Riter",
+                category: "Literatura Brasileira",
+                description: "Aventuras de um garotão em luta contra escadas, buracos e outras desconsiderações do mundo.",
+                year: 2006
+            },
+            {
+                id: 231,
+                title: "Alexandre e outros heróis",
+                author: "Graciliano Ramos",
+                category: "Literatura Brasileira",
+                description: "Traz histórias folclóricas sobre heróis e grandezas - todas elas inverossímeis.",
+                year: 1944
+            },
+            {
+                id: 232,
+                title: "Ali Babá e os quarenta ladrões",
+                author: "Antoine Galland",
+                category: "Clássicos",
+                description: "Cassim e Ali-Babá eram dois irmãos que viviam na Pérsia, num tempo distante.",
+                year: 1704
+            },
+            {
+                id: 233,
+                title: "Alice no país das maravilhas",
+                author: "Lewis Carroll",
+                category: "Clássicos",
+                description: "Alice vai parar no País das Maravilhas, um mundo bizarro, cheio de animais falantes.",
+                year: 1865
+            },
+            {
+                id: 234,
+                title: "Aluado",
+                author: "Affonso Romano de Sant'Anna",
+                category: "Poesia",
+                description: "Entrar na adolescência, segundo os contos de Aluado, significa perder-se em galopes furtivos pelas noites de si mesmo.",
+                year: 1980
+            },
+            {
+                id: 235,
+                title: "Amar é uma conexão discada",
+                author: "Felipe Gurgel",
+                category: "Literatura Brasileira",
+                description: "Um garoto de Salvador chamado Caio, narra romances e amizades que teve a partir do surgimento da internet.",
+                year: 2018
+            },
+            {
+                id: 236,
+                title: "Amazonas no coração encantado da floresta",
+                author: "Rogério Andrade Barbosa",
+                category: "Literatura Brasileira",
+                description: "As sete histórias aqui reunidas foram recontadas no registro de quem fala a 'língua' da região.",
+                year: 2005
+            },
+            {
+                id: 237,
+                title: "Perdido na Amazônia",
+                author: "Ivan Zigg",
+                category: "Infantojuvenil",
+                description: "Depois de Perdido na Amazônia 1, Dan volta à floresta com o avô para dessa vez tentarem se divertir juntos.",
+                year: 2012
+            },
+            {
+                id: 238,
+                title: "Amigo é comigo",
+                author: "Tatiana Belinky",
+                category: "Infantojuvenil",
+                description: "Amizade, inimizade, afetividade, agressividade, justiça, namoro, respeito, traição.",
+                year: 1999
+            },
+            {
+                id: 239,
+                title: "Amigo se escreve com H",
+                author: "Maria Cristina Furtado",
+                category: "Infantojuvenil",
+                description: "Não se trata de um erro de ortografia. H é o nome do melhor amigo de Maria Antônia.",
+                year: 2003
+            },
+            {
+                id: 240,
+                title: "Amor & cuba-libre",
+                author: "Luiz Ruffato",
+                category: "Literatura Brasileira",
+                description: "Conta a história de Sérgio, na década de 60 ele se mudou para Americana.",
+                year: 2016
+            },
+            {
+                id: 241,
+                title: "Os amores de Perseu",
+                author: "Carlos Alberto de Carvalho",
+                category: "Literatura Brasileira",
+                description: "Ao recontar um dos mais belos mitos gregos, Carlos Alberto de Carvalho constrói sólida e atraente ponte entre o presente e o passado.",
+                year: 2009
+            },
+            {
+                id: 242,
+                title: "O amuleto da chuva",
+                author: "Antônio Torres",
+                category: "Literatura Brasileira",
+                description: "O clima no Saara Verde está mudando: as chuvas estão cada vez mais escassas.",
+                year: 2010
+            },
+            {
+                id: 243,
+                title: "O anel de Tutancâmon",
+                author: "Luciana Savaget",
+                category: "Infantojuvenil",
+                description: "Esta aventura, traz muitas informações a respeito de alguns países africanos.",
+                year: 2007
+            },
+            {
+                id: 244,
+                title: "A angústia das pequenas coisas ridículas",
+                author: "Antônio Xerxenesky",
+                category: "Literatura Brasileira",
+                description: "A protagonista tem dificuldade para lidar com tudo o que está acontecendo.",
+                year: 2019
+            },
+            {
+                id: 245,
+                title: "Ansiedade- Como enfrentar o mal do século",
+                author: "Augusto Cury",
+                category: "Didáticos",
+                description: "Livro sobre como lidar com a ansiedade na sociedade contemporânea.",
+                year: 2013
+            },
+            {
+                id: 246,
+                title: "Antes do Depois",
+                author: "Bartolomeu Campos de Queirós",
+                category: "Literatura Brasileira",
+                description: "A narrativa acompanha o nascimento do narrador-personagem.",
+                year: 1999
+            },
+            {
+                id: 247,
+                title: "Antes que o mundo acabe",
+                author: "Marcel Caram",
+                category: "Literatura Brasileira",
+                description: "História de um pai que deseja reconstruir a relação com seu filho adolescente.",
+                year: 2009
+            },
+            {
+                id: 248,
+                title: "Apática",
+                author: "Paulo Venturelli",
+                category: "Literatura Brasileira",
+                description: "Apática é uma cidade perdida no tempo e no espaço.",
+                year: 2006
+            },
+            {
+                id: 249,
+                title: "Aqualtune",
+                author: "Janaína Amado",
+                category: "Infantojuvenil",
+                description: "Maria, Guilherme e Aqualtune só queriam curtir as férias juntos.",
+                year: 2014
+            },
+            {
+                id: 250,
+                title: "Aquilo que não se vê",
+                author: "Marina Colasanti",
+                category: "Literatura Brasileira",
+                description: "Ambientado no sertão nordestino, o livro narra a trajetória de algumas pessoas e seres marcados pelas dificuldades cotidianas.",
+                year: 2011
+            },
+            {
+                id: 251,
+                title: "O arminho dorme",
+                author: "Flávio Carneiro",
+                category: "Literatura Brasileira",
+                description: "Na Florença do século XVI, em pleno berço do Renascimento italiano, a poderosa família Medici recebe um novo membro.",
+                year: 2005
+            },
+            {
+                id: 252,
+                title: "Arsène Lupin o ladrão de casaca",
+                author: "Maurice Leblanc",
+                category: "Literatura Estrangeira",
+                description: "Este livro reúne as nove histórias de Arsène Lupin, o gentleman ladrão.",
+                year: 1907
+            },
+            {
+                id: 253,
+                title: "A árvore que dava dinheiro",
+                author: "Dominguinhos",
+                category: "Infantojuvenil",
+                description: "Os habitantes de Felicidade, município pequeno do interior do Brasil, vivem com invejável tranquilidade.",
+                year: 1995
+            },
+            {
+                id: 254,
+                title: "Um assassinato, um Mistério e um Casamento",
+                author: "Mark Twain",
+                category: "Literatura Estrangeira",
+                description: "O livro narra as peripécias de John Gray, um fazendeiro de uma cidadezinha do Missouri.",
+                year: 1945
+            },
+            {
+                id: 255,
+                title: "A aurora da minha vida",
+                author: "Naum Alves de Souza",
+                category: "Teatro",
+                description: "O livro explora relações e conflitos entre alunos e professores na década de 1970.",
+                year: 1983
+            },
+            {
+                id: 256,
+                title: "Autobiografia de um super-herói",
+                author: "Quadrinho",
+                category: "Quadrinhos",
+                description: "Distante dos heróis que conhecemos... e descobre que o herói é nada menos que uma pessoa igualzinha a você.",
+                year: 2008
+            },
+            {
+                id: 257,
+                title: "Ave do Paraíso",
+                author: "Heloisa Prieto",
+                category: "Infantojuvenil",
+                description: "Alternando sentimentos como tristeza e alegria, é um sensível relato das experiências vividas por uma garota do interior.",
+                year: 1998
+            },
+            {
+                id: 258,
+                title: "As aventuras de Huckleberry Finn",
+                author: "Mark Twain",
+                category: "Literatura Estrangeira",
+                description: "Após forjar sua própria morte a fim de se livrar de seu pai bébado e abusivo.",
+                year: 1884
+            },
+            {
+                id: 259,
+                title: "As Aventuras de Tom Sawyer",
+                author: "Mark Twain",
+                category: "Literatura Estrangeira",
+                description: "Um menino astuto, mostra-se tão à vontade no mundo respeitável de sua tia Polly.",
+                year: 1876
+            },
+            {
+                id: 260,
+                title: "Aventuras de Xisto",
+                author: "Luis Dill",
+                category: "Infantojuvenil",
+                description: "Após encontrar o Manual Secreto dos Bruxos, Xisto decide ser hora de acabar com todos os bruxos do planeta.",
+                year: 2004
+            },
+            {
+                id: 261,
+                title: "A Aventureira",
+                author: "Jack London",
+                category: "Literatura Estrangeira",
+                description: "Joan, menina rica e estudada, um dia decide largar tudo para acompanhar seu pai, um bem-sucedido comerciante.",
+                year: 1916
+            },
+            {
+                id: 262,
+                title: "Babel Hotel",
+                author: "Fábio Moon e Gabriel Bá",
+                category: "Quadrinhos",
+                description: "Um grupo de sete pessoas, totalmente aleatórias, começa a sentir os efeitos misteriosos de um 'feitiço' do tempo.",
+                year: 2013
+            },
+            {
+                id: 263,
+                title: "As Aventuras do Barão de Munchausen",
+                author: "Rudolf Erich Raspe",
+                category: "Literatura Estrangeira",
+                description: "Quando o Barão foi morar em sua propriedade rural e passou a receber amigos e hóspedes.",
+                year: 1785
+            },
+            {
+                id: 264,
+                title: "O Baú do tio Quim",
+                author: "Bartolomeu Campos de Queirós",
+                category: "Infantojuvenil",
+                description: "Quando o baú do Tio Quim chegou, causou um bocado de assombro na família.",
+                year: 2006
+            },
+            {
+                id: 265,
+                title: "Beowulf",
+                author: "Anônimo",
+                category: "Clássicos",
+                description: "Seu enredo baseia-se em material folclórico de diversas origens.",
+                year: 1000
+            },
+            {
+                id: 266,
+                title: "O bilhete premiado",
+                author: "João Carlos Marinho",
+                category: "Infantojuvenil",
+                description: "Jorginho está passando por uma fase difícil em sua vida.",
+                year: 1975
+            },
+            {
+                id: 267,
+                title: "O bibliotecário que mediu a Terra",
+                author: "Kathryn Lasky",
+                category: "Literatura Estrangeira",
+                description: "Seu maior desejo era descobrir como medir a Terra. E descobriu!",
+                year: 1994
+            },
+            {
+                id: 268,
+                title: "O BGA O bom gigante amigo",
+                author: "Roald Dahl",
+                category: "Infantojuvenil",
+                description: "Ao acordar, Sofia dá de cara com o ser humano mais alto que já vira.",
+                year: 1982
+            },
+            {
+                id: 269,
+                title: "Em busca do Santo Graal, o Rei Artur e os cavaleiros da Távola Redonda",
+                author: "Howard Pyle",
+                category: "Literatura Estrangeira",
+                description: "As lendas do Rei Artur e os cavaleiros da Távola Redonda.",
+                year: 1903
+            },
+            {
+                id: 270,
+                title: "De braços para o alto",
+                author: "João Carlos Marinho",
+                category: "Infantojuvenil",
+                description: "Um garoto de sete anos, criado no bairro do Brás, em São Paulo, vai passar as férias na fazenda.",
+                year: 1982
+            },
+            {
+                id: 271,
+                title: "Bob Kurt",
+                author: "Márcio Souza",
+                category: "Literatura Brasileira",
+                description: "Uma cabana na montanha, um penhasco, um corpo que cai. Quem seria capaz de empurrar Lisa Sky lá de cima?",
+                year: 2003
+            },
+            {
+                id: 272,
+                title: "Cabra-cega",
+                author: "José J. Veiga",
+                category: "Literatura Brasileira",
+                description: "Uma adolescente é brutalmente assassinada numa cidade do interior dos Estados Unidos em 1964.",
+                year: 1975
+            },
+            {
+                id: 273,
+                title: "A caçadora de árvores",
+                author: "Jennifer Richard Jacobson",
+                category: "Literatura Estrangeira",
+                description: "A pequena Samaa vive em um mundo que poderá ser o nosso em alguns anos.",
+                year: 2017
+            },
+            {
+                id: 274,
+                title: "No caminho dos sonhos",
+                author: "Marcos Rey",
+                category: "Literatura Brasileira",
+                description: "Refugiado em uma praia, Marcelo recebe cartas que revelam sua história familiar.",
+                year: 1978
+            },
+            {
+                id: 275,
+                title: "O caneco de Prata",
+                author: "João Carlos Marinho",
+                category: "Infantojuvenil",
+                description: "Quando a Turma do Gordo decide que vai ganhar o campeonato mirim de futebol, vale de tudo!",
+                year: 1984
+            },
+            {
+                id: 276,
+                title: "O carteiro e o Poeta",
+                author: "Antonio Skármeta",
+                category: "Literatura Estrangeira",
+                description: "O que mais pode querer um homme apaixonado que ter um dos maiores poetas latinos como conselheiro sentimental?",
+                year: 1985
+            },
+            {
+                id: 277,
+                title: "o caso dos cães irados",
+                author: "João Carlos Marinho",
+                category: "Infantojuvenil",
+                description: "Zecão, um viralata dócil se transforma em fera raivosa e ataca o zelador do colégio.",
+                year: 1979
+            },
+            {
+                id: 278,
+                title: "O Conde de Monte Cristo",
+                author: "Alexandre Dumas",
+                category: "Literatura Estrangeira",
+                description: "A clássica história de vingança e redenção de Edmond Dantès.",
+                year: 1844
+            },
+            {
+                id: 279,
+                title: "Conexão Sardinha",
+                author: "Luiz Antonio Aguiar",
+                category: "Literatura Brasileira",
+                description: "História policial ambientada no Rio de Janeiro, com tema muito atual.",
+                year: 2001
+            },
+            {
+                id: 280,
+                title: "Confidências de um pai pedindo arrego",
+                author: "Walcyr Carrasco",
+                category: "Literatura Brasileira",
+                description: "O cara vai ser pai. Um grande susto, mas também um grande barato!",
+                year: 2003
+            },
+            {
+                id: 281,
+                title: "Confissões de um vira-lata",
+                author: "Orígenes Lessa",
+                category: "Literatura Brasileira",
+                description: "O consagrado escritor Orígenes Lessa, de forma dinâmica e bem-humorada.",
+                year: 1962
+            },
+            {
+                id: 282,
+                title: "Confusões & Calafrios",
+                author: "João Carlos Marinho",
+                category: "Infantojuvenil",
+                description: "Fafá gostaria de ter a mesma confiança de sua irmã e do primo, nos planos que a dupla criava.",
+                year: 1988
+            },
+            {
+                id: 283,
+                title: "Convergente",
+                author: "Veronica Roth",
+                category: "Literatura Estrangeira",
+                description: "Terceiro volume da trilogia Divergente.",
+                year: 2013
+            },
+            {
+                id: 284,
+                title: "Chá das cinco",
+                author: "João Carlos Marinho",
+                category: "Infantojuvenil",
+                description: "Desta vez os alunos de dona Dolores são guiados apenas pelo motorista Gumercindo.",
+                year: 1992
+            },
+            {
+                id: 285,
+                title: "Cony O ato e o fato",
+                author: "Carlos Heitor Cony",
+                category: "Literatura Brasileira",
+                description: "Mais do que um documento da nossa história, encontramos nestas páginas o primeiro registro.",
+                year: 1975
+            },
+            {
+                id: 286,
+                title: "Copo Vazio",
+                author: "Felipe Franco Munhoz",
+                category: "Literatura Brasileira",
+                description: "O romance conta a história de Mirela, uma mulher inteligente e bem-sucedida.",
+                year: 2018
+            },
+            {
+                id: 287,
+                title: "Corda Bamba",
+                author: "Lygia Bojunga",
+                category: "Infantojuvenil",
+                description: "É um sopro de coragem que nos leva ao encontro de forças adormecidas.",
+                year: 1979
+            },
+            {
+                id: 288,
+                title: "Cuidado garoto apaixonado",
+                author: "Pedro Bandeira",
+                category: "Infantojuvenil",
+                description: "Cuidado! O primeiro amor pode chegar numa flechada e deixar qualquer um com o coração batendo no joelho.",
+                year: 1995
+            },
+            {
+                id: 289,
+                title: "Os criminosos vieram para o chá",
+                author: "João Carlos Marinho",
+                category: "Infantojuvenil",
+                description: "Um roubo aparentemente perfeito em uma joalheria não deixa rastros.",
+                year: 1986
+            },
+            {
+                id: 290,
+                title: "Cinco crianças e um segredo",
+                author: "E. Nesbit",
+                category: "Literatura Estrangeira",
+                description: "O livro narra as aventuras de cinco irmãos que, durante as férias, encontram um duende da areia.",
+                year: 1902
+            },
+            {
+                id: 291,
+                title: "A colina dos Suspiros",
+                author: "Ganymédes José",
+                category: "Literatura Brasileira",
+                description: "Futebol, em Pau Seco, é o que move ou paraliza a cidade.",
+                year: 1977
+            },
+            {
+                id: 292,
+                title: "Como viver para sempre",
+                author: "Colin Thompson",
+                category: "Literatura Estrangeira",
+                description: "Mesmo antes de descobrir o segredo do museu, Pedro já vivia em dois universos à parte.",
+                year: 2004
+            },
+            {
+                id: 293,
+                title: "David Copperfield",
+                author: "Charles Dickens",
+                category: "Literatura Estrangeira",
+                description: "David Copperfield vive feliz com a mae viuva, até que ela se casa com o senhor Murdstone.",
+                year: 1850
+            },
+            {
+                id: 294,
+                title: "Delta um comando para o tempo",
+                author: "Affonso Solano",
+                category: "Ficção Científica",
+                description: "Alex está trabalhando há 72 horas, quando é surpreendido por um convite para entrar num bate-papo virtual.",
+                year: 2014
+            },
+            {
+                id: 295,
+                title: "Depois da chuva",
+                author: "Yak Rivais",
+                category: "Literatura Estrangeira",
+                description: "Numa noite após uma forte chuva, as lajes dos túmulos do Cemitério de São Patrício reluzem ao luar.",
+                year: 2002
+            },
+            {
+                id: 296,
+                title: "Depois daquela viagem",
+                author: "Valéria Piassa Polizzi",
+                category: "Biografia",
+                description: "Diário de bordo de uma jovem que aprendeu a viver com HIV/AIDS.",
+                year: 2003
+            },
+            {
+                id: 297,
+                title: "Desenho mudo",
+                author: "Marçal Aquino",
+                category: "Literatura Brasileira",
+                description: "Nina não falava, mas revelava em seus desenhos uma assombrosa percepção do mundo.",
+                year: 2005
+            },
+            {
+                id: 298,
+                title: "Desenhos de guerra e de amor",
+                author: "Lygia Bojunga",
+                category: "Infantojuvenil",
+                description: "Imagine dois diários escritos por pessoas completamente diferentes - mas sobre os mesmos acontecimentos.",
+                year: 1982
+            },
+            {
+                id: 299,
+                title: "Desprezados F.C.",
+                author: "João Carlos Marinho",
+                category: "Infantojuvenil",
+                description: "Reservas desajeitados disputam final de campeonato Desprezados F.C.",
+                year: 1990
+            },
+            {
+                id: 300,
+                title: "Destino em aberto",
+                author: "João Carlos Marinho",
+                category: "Infantojuvenil",
+                description: "Por razões diferentes, dois garotos saem de São Paulo.",
+                year: 1994
+            },
+            {
+                id: 301,
+                title: "Devezenquandário",
+                author: "Rosa Amanda Strausz",
+                category: "Literatura Brasileira",
+                description: "Leila Rosa é uma adolescente que mora em Brasília e escreve no computador um devezenquandário.",
+                year: 1995
+            },
+            {
+                id: 302,
+                title: "Dez anos e nove meses",
+                author: "Frederic Gaussen",
+                category: "Literatura Estrangeira",
+                description: "Frédéric é o caçula dos Falcozzi, família de origem italiana que vive na pequena cidade de Ugine, França.",
+                year: 1989
+            },
+            {
+                id: 303,
+                title: "O dia em que a minha vida mudou",
+                author: "Miriam Leitão",
+                category: "Infantojuvenil",
+                description: "Mia estava tendo um dia normal, mas tudo vira de cabeça para baixo quando recebe um convite inesperado.",
+                year: 2012
+            },
+            {
+                id: 304,
+                title: "O dom da infância",
+                author: "Boubacar Diallo",
+                category: "Literatura Estrangeira",
+                description: "Ainda pequeno, Baba vai morar em Kassaro, minúscula aldeia no Mali, onde é criado pelos avós.",
+                year: 2007
+            },
+            {
+                id: 305,
+                title: "Dom Quixote das crianças",
+                author: "Monteiro Lobato",
+                category: "Infantojuvenil",
+                description: "Adaptação de Monteiro Lobato do clássico de Cervantes para o público infantojuvenil.",
+                year: 1936
+            },
+            {
+                id: 306,
+                title: "O diabo na noite de Natal",
+                author: "Monteiro Lobato",
+                category: "Infantojuvenil",
+                description: "Todos haviam chegado para a festa de Natal na casa das pastorinhas.",
+                year: 1943
+            },
+            {
+                id: 307,
+                title: "Diamante Negro",
+                author: "Anna Sewell",
+                category: "Literatura Estrangeira",
+                description: "Um potro inteligente e forte conta todas as transformações de sua vida de forma diferente.",
+                year: 1877
+            },
+            {
+                id: 308,
+                title: "A distância das coisas",
+                author: "Nelson Cruz",
+                category: "Literatura Brasileira",
+                description: "Livro que explora as relações humanas e a percepção do mundo através das distâncias.",
+                year: 2009
+            },
+            {
+                id: 309,
+                title: "Divergente",
+                author: "Veronica Roth",
+                category: "Literatura Estrangeira",
+                description: "Primeiro volume da trilogia Divergente, situada em uma Chicago futurista distópica.",
+                year: 2011
+            },
+            {
+                id: 310,
+                title: "O doce segredo de Ogbón",
+                author: "Rogério Andrade Barbosa",
+                category: "Infantojuvenil",
+                description: "Festa da Amizade! Todos na aldeia ajudam na realização da festa.",
+                year: 2008
+            },
+            {
+                id: 311,
+                title: "2083",
+                author: "Augusto de Campos",
+                category: "Poesia",
+                description: "O fim dos livros de papel e tinta está próximo. Restarão poucos exemplares.",
+                year: 2011
+            },
+            {
+                id: 312,
+                title: "Os doze trabalhos de Hércules",
+                author: "Monteiro Lobato",
+                category: "Infantojuvenil",
+                description: "Adaptação de Monteiro Lobato dos famosos doze trabalhos de Hércules da mitologia grega.",
+                year: 1944
+            },
+            {
+                id: 313,
+                title: "A droga da obediência",
+                author: "Pedro Bandeira",
+                category: "Infantojuvenil",
+                description: "Uma turma de adolescentes enfrenta o mais diabólico dos crimes!",
+                year: 1984
+            },
+            {
+                id: 314,
+                title: "O enigma dos dados",
+                author: "Marcelo Del Debbio",
+                category: "Literatura Brasileira",
+                description: "Existem muitas formas de magia. A matemática é uma delas e Isaac Samus tinha conhecimento disso.",
+                year: 2013
+            },
+            {
+                id: 315,
+                title: "Entre deuses e monstros",
+                author: "Heloisa Prieto",
+                category: "Literatura Brasileira",
+                description: "Narra a jornada de um homem comum que vê sua vida transformada pelos enigmas de deuses, monstros e heróis.",
+                year: 2004
+            },
+            {
+                id: 316,
+                title: "Uma escuridão bonita",
+                author: "Ondjaki",
+                category: "Literatura Estrangeira",
+                description: "Uma escuridão bonita fala da beleza desses encontros.",
+                year: 2017
+            },
+            {
+                id: 317,
+                title: "Eterno",
+                author: "Alyson Noël",
+                category: "Literatura Estrangeira",
+                description: "Inquietações da juventude, cultura digital no cotidiano dos jovens, a vulnerabilidade.",
+                year: 2009
+            },
+            {
+                id: 318,
+                title: "Eu sou mais eu!",
+                author: "Elisa Lucinda",
+                category: "Literatura Brasileira",
+                description: "Vidinha, negrinha, lindinha, olhos de jabuticaba mora na praça e se acostumou com a fome.",
+                year: 2006
+            },
+            {
+                id: 319,
+                title: "Estrelas Tortas",
+                author: "Walcyr Carrasco",
+                category: "Infantojuvenil",
+                description: "Marcella era alta, bonita e a principal jogadora de vôlei do colégio.",
+                year: 2001
+            },
+            {
+                id: 320,
+                title: "Os Estrangeiros",
+                author: "André Vianco",
+                category: "Literatura Brasileira",
+                description: "A emocionante aventura de três irmãos índios no Brasil colonial.",
+                year: 2004
+            },
+            {
+                id: 321,
+                title: "O estranho apartamento do professor Clodoberto",
+                author: "Paulo Venturelli",
+                category: "Literatura Brasileira",
+                description: "Estranho apartamento do professor Clodoberto é onde se encontram personagens ternos e reais.",
+                year: 2003
+            },
+            {
+                id: 322,
+                title: "Esse Cabelo",
+                author: "Djaimilia Pereira de Almeida",
+                category: "Literatura Estrangeira",
+                description: "O Livro traz a contribuição única da língua portuguesa a um diálogo global.",
+                year: 2015
+            },
+            {
+                id: 323,
+                title: "Espantosos egípcios",
+                author: "Terry Deary",
+                category: "Infantojuvenil",
+                description: "Este livro traz muitas informações sobre os faraós e seus súditos.",
+                year: 1996
+            },
+            {
+                id: 324,
+                title: "A fábrica de fazer pano",
+                author: "Ignácio de Loyola Brandão",
+                category: "Literatura Brasileira",
+                description: "Conto que faz parte da coletânea Cadeiras Proibidas.",
+                year: 1979
+            },
+            {
+                id: 325,
+                title: "Fábulas de Monteiro Lobato",
+                author: "Monteiro Lobato",
+                category: "Infantojuvenil",
+                description: "Coletânea de fábulas recontadas por Monteiro Lobato.",
+                year: 1922
+            },
+            {
+                id: 326,
+                title: "O fantasma de Canterville",
+                author: "Oscar Wilde",
+                category: "Literatura Estrangeira",
+                description: "Sir Simon é um fantasma infeliz e já não sabe mais o que fazer.",
+                year: 1887
+            },
+            {
+                id: 327,
+                title: "O fantástico mistério de Feiurinha",
+                author: "Pedro Bandeira",
+                category: "Infantojuvenil",
+                description: "Quase todas as histórias antigas que você leu terminavam dizendo que a heroína se casava com o príncipe encantado.",
+                year: 1986
+            },
+            {
+                id: 328,
+                title: "A filha do fabricante de fogos de artifício",
+                author: "Philip Pullman",
+                category: "Literatura Estrangeira",
+                description: "O livro conta a história de Lila. uma menina que deseja se tornar. como o seu pai.",
+                year: 1999
+            },
+            {
+                id: 329,
+                title: "Filho de peixe",
+                author: "Ronaldo Correia de Brito",
+                category: "Literatura Brasileira",
+                description: "História narrada por Nino, um menino que vive com sua família em uma pequena comunidade de pescadores.",
+                year: 2005
+            },
+            {
+                id: 330,
+                title: "O fingidor",
+                author: "Fernando Pessoa",
+                category: "Poesia",
+                description: "Obra clássica do teatro contemporâneo brasileiro, O Fingidor é uma ficção que homenageia o poeta maior.",
+                year: 1988
+            },
+            {
+                id: 331,
+                title: "Fuja coelhinho, fuja",
+                author: "Barbara Else",
+                category: "Literatura Estrangeira",
+                description: "Quando o pai de Lizzie recusa-se a lutar na Segunda Guerra Mundial, a polícia vem à sua procura.",
+                year: 2012
+            },
+            {
+                id: 332,
+                title: "Garra de Campeão",
+                author: "João Carlos Marinho",
+                category: "Infantojuvenil",
+                description: "Nas corridas de motocross, o piloto Felipe disputa com o veterano Rato a vitória nas pistas e o amor de Joyce.",
+                year: 1980
+            },
+            {
+                id: 333,
+                title: "Uma garrafa no mar de Gaza",
+                author: "Valérie Zenatti",
+                category: "Literatura Estrangeira",
+                description: "Um homem-bomba se explodiu dentro de um café em Jerusalém.",
+                year: 2005
+            },
+            {
+                id: 334,
+                title: "A gata do rio Nilo",
+                author: "Ruth Rocha",
+                category: "Infantojuvenil",
+                description: "O cenário principal é o Egito antigo, onde gatos misteriosos desempenham um papel crucial.",
+                year: 2003
+            },
+            {
+                id: 335,
+                title: "O gato do teatro",
+                author: "Lygia Bojunga",
+                category: "Infantojuvenil",
+                description: "Fugindo de uma implacável perseguição, um gato vai parar no saguão de um teatro em decadência.",
+                year: 2003
+            },
+            {
+                id: 336,
+                title: "As gêmeas da família",
+                author: "Heloisa Seixas",
+                category: "Literatura Brasileira",
+                description: "O livro conta a história das trigêmeas idênticas Verdança, Azulfé e Rosade.",
+                year: 2001
+            },
+            {
+                id: 337,
+                title: "Gigantes belgas",
+                author: "Bartolomeu Campos de Queirós",
+                category: "Literatura Brasileira",
+                description: "Konrad Bantelmann é um garoto inteligente, comportado e muito sensato.",
+                year: 2004
+            },
+            {
+                id: 338,
+                title: "Golpe de vista",
+                author: "João Gilberto Noll",
+                category: "Literatura Brasileira",
+                description: "Golpe de vista é um livro repleto de relatos tirados da vivência de um portador de deficiência visual.",
+                year: 1980
+            },
+            {
+                id: 339,
+                title: "Um gosto de quero mais",
+                author: "João Carlos Marinho",
+                category: "Infantojuvenil",
+                description: "Esta é uma história romântica com uma boa dose de drama.",
+                year: 1987
+            },
+            {
+                id: 340,
+                title: "O Grumete e o Tupinambá",
+                author: "Antonio Olinto",
+                category: "Literatura Brasileira",
+                description: "Este romance, ambientado no século XVI, traz a amizade de Jean - grumete de um navio francês.",
+                year: 1964
+            },
+            {
+                id: 341,
+                title: "A grande assembleia dos bichos pestilentos e peçonhentos",
+                author: "Ana Maria Machado",
+                category: "Infantojuvenil",
+                description: "A enigmática Assembleia do título promove um encontro inusitado entre representantes da nossa fauna.",
+                year: 1989
+            },
+            {
+                id: 342,
+                title: "O grito da selva",
+                author: "Jack London",
+                category: "Literatura Estrangeira",
+                description: "Mostra as aventuras e desventuras do cão Buck.",
+                year: 1903
+            },
+            {
+                id: 343,
+                title: "O grito do Hip Hop",
+                author: "Alessandro Buzo",
+                category: "Literatura Brasileira",
+                description: "Toninho vive em uma comunidade carente da periferia de São Paulo.",
+                year: 2006
+            },
+            {
+                id: 344,
+                title: "A guerra da rua dos siamipês",
+                author: "João Carlos Marinho",
+                category: "Infantojuvenil",
+                description: "Em uma rua dois ipês tomavam conta do pedaço.",
+                year: 1991
+            },
+            {
+                id: 345,
+                title: "A guerra do lanche",
+                author: "João Carlos Marinho",
+                category: "Infantojuvenil",
+                description: "Para Cândido a primeira semana de aula no ginásio foi um inferno!",
+                year: 1989
+            },
+            {
+                id: 346,
+                title: "Uma história de voos",
+                author: "Graciliano Ramos",
+                category: "Literatura Brasileira",
+                description: "Enquanto o narrador revela ao leitor algumas características do seu estilo e do que significa ser escritor.",
+                year: 1938
+            },
+            {
+                id: 347,
+                title: "A Ilha do tesouro",
+                author: "Robert Louis Stevenson",
+                category: "Literatura Estrangeira",
+                description: "Um clássico de aventura que conta a história de um garoto que cruza os mares atrás de um tesouro escondido.",
+                year: 1883
+            },
+            {
+                id: 348,
+                title: "A história de Iqbal",
+                author: "Francesco D'Adamo",
+                category: "Literatura Estrangeira",
+                description: "Romance baseado na história verídica de Iqbal Mashir, menino paquistanês que enfrentou a 'máfia do tapete'.",
+                year: 2001
+            },
+            {
+                id: 349,
+                title: "O Judas em Sábado de Aleluia",
+                author: "Martins Pena",
+                category: "Teatro",
+                description: "A história se passa no Rio de Janeiro, em 1844, na casa de José Pimenta, cabo da Guarda Nacional.",
+                year: 1844
+            },
+            {
+                id: 350,
+                title: "Júnior e os biscoitos de zumbis",
+                author: "Fábio Yabu",
+                category: "Infantojuvenil",
+                description: "Júnior se diverte andando de skate por aí e indo à banca do Valdemar fuçar os gibis com seu melhor amigo.",
+                year: 2011
+            },
+                        {
+                id: 351,
+                title: "A ladeira da saudade",
+                author: "Marina Colasanti",
+                category: "Literatura Brasileira",
+                description: "Dois jovens que se amam acima de tudo, até do preconceito… O despertar de um amor verdadeiro no coração de uma adolescente.",
+                year: 2000
+            },
+            {
+                id: 352,
+                title: "O ladrão de sonhos",
+                author: "Lygia Bojunga",
+                category: "Infantojuvenil",
+                description: "Doze contos que captam com muita sensibilidade momentos de surpresa, dor, descoberta e esperança na vida de pessoas como nós.",
+                year: 1997
+            },
+            {
+                id: 353,
+                title: "Lola e Ervilha",
+                author: "Flávia Savary",
+                category: "Infantojuvenil",
+                description: "Lola mora com a mãe no Ervilha, um barco atracado à beira do rio. Desde que seu pai desapareceu, ela se recusa a crescer e vive no mundo da fantasia.",
+                year: 2005
+            },
+            {
+                id: 354,
+                title: "Madalena",
+                author: "Myriam Fraga",
+                category: "Literatura Brasileira",
+                description: "Da jovem sonhadora do interior da Bahia, dada pelo pai em casamento a um homem bêbado e violento em troca de terras.",
+                year: 1998
+            },
+            {
+                id: 355,
+                title: "No meio da noite escura tem um pé de maravilha",
+                author: "Ricardo Azevedo",
+                category: "Infantojuvenil",
+                description: "Dez contos recolhidos do folclore brasileiro são recontados em ton coloquial e ilustrados com o talento de um especialista em literatura infantil.",
+                year: 2002
+            },
+            {
+                id: 356,
+                title: "Meninão do caixote",
+                author: "João Carlos Marinho",
+                category: "Infantojuvenil",
+                description: "Apresenta a história de um menino que descobre ser um talento da sinuca.",
+                year: 1993
+            },
+            {
+                id: 357,
+                title: "Minhas memórias de Lobato",
+                author: "Emília",
+                category: "Infantojuvenil",
+                description: "Nesse livro é o próprio Monteiro Lobato quem se transforma em objeto das 'memórias' de Emília e de seu ajudante, o Visconde de Sabugosa.",
+                year: 1948
+            },
+            {
+                id: 358,
+                title: "Os miseráveis",
+                author: "Victor Hugo",
+                category: "Literatura Estrangeira",
+                description: "Após cumprir pena de trabalhos forçados por quase vinte anos, Jean Valjean é posto em liberdade.",
+                year: 1862
+            },
+            {
+                id: 359,
+                title: "Aventuras de Pedro Malasartes",
+                author: "Nelson Albissú",
+                category: "Literatura Brasileira",
+                description: "Dono de uma lábia sem tamanho, Pedro Malasartes sai pelo mundo tirando vantagem de todos que se colocam em seu caminho.",
+                year: 2007
+            },
+            {
+                id: 360,
+                title: "O poço do Visconde",
+                author: "Monteiro Lobato",
+                category: "Infantojuvenil",
+                description: "O Visconde de Sabugosa tornou-se especialista em geologia e vive estudando a história da Terra.",
+                year: 1937
+            },
+            {
+                id: 361,
+                title: "O Poeta e o Cavaleiro",
+                author: "Ana Maria Machado",
+                category: "Infantojuvenil",
+                description: "Findomundo era uma cidadezinha simples e pacata como ela só, até que um estrondo ensurdecedor de cima de um morro assustou todo mundo!",
+                year: 2008
+            },
+            {
+                id: 362,
+                title: "O que é que eu posso fazer?",
+                author: "Lygia Bojunga",
+                category: "Infantojuvenil",
+                description: "Naquela noite, o ônibus em que Thiago se encontra é assaltado por dois jovens.",
+                year: 1998
+            },
+            {
+                id: 363,
+                title: "Sangue fresco",
+                author: "João Carlos Marinho",
+                category: "Infantojuvenil",
+                description: "Um bandido sequestra as crianças bem-nutridas das escolas particulares de São Paulo e as leva para um campo de concentração na Amazônia.",
+                year: 1995
+            },
+            {
+                id: 364,
+                title: "Senhor Vento e Dona Chuva",
+                author: "Paul de Musset",
+                category: "Literatura Estrangeira",
+                description: "Senhor Vento e Dona Chuva é uma adaptação de um texto do século XIX, escrito por Paul de Musset.",
+                year: 2001
+            },
+            {
+                id: 365,
+                title: "74 dias para o fim",
+                author: "Paula Pimenta",
+                category: "Infantojuvenil",
+                description: "O livro narra a trajetória dos últimos 74 dias de aula antes da formatura do jovem aluno Valdir.",
+                year: 2012
+            },
+            {
+                id: 366,
+                title: "Suzy e as águas-vivas",
+                author: "Ali Benjamin",
+                category: "Literatura Estrangeira",
+                description: "Suzy Swanson está quase certa do real motivo da morte de Franny Jackson.",
+                year: 2015
+            },
+            {
+                id: 367,
+                title: "Todo mundo é misturado",
+                author: "Lázaro Ramos",
+                category: "Infantojuvenil",
+                description: "Pablo, o novo menino da classe de Júlia, é boliviano.",
+                year: 2018
+            },
+            {
+                id: 368,
+                title: "A vingança do timão",
+                author: "João Carlos Marinho",
+                category: "Infantojuvenil",
+                description: "É um livro realmente comovente. Que toca no fundo da alma de quem se identifica com ele.",
+                year: 1997
+            },
+            {
+                id: 369,
+                title: "Uólace e João Victor",
+                author: "Walcyr Carrasco",
+                category: "Infantojuvenil",
+                description: "João Victor mora com a mãe e vive as alegrias e dificuldades de um adolescente de classe média.",
+                year: 2003
+            },
+            {
+                id: 370,
+                title: "Zumbi assombra quem?",
+                author: "Júlio Emílio Braz",
+                category: "Infantojuvenil",
+                description: "Zumbi é um tipo de monstro fedorento caindo aos pedaços ou um guerreiro pensante que mora nos vãos da terra?",
+                year: 2009
+            },
+            {
+                id: 371,
+                title: "Agosto",
+                author: "Rubem Fonseca",
+                category: "Literatura Brasileira",
+                description: "1o de agosto de 1954, Rio de Janeiro, capital da República.",
+                year: 1990
+            },
+            {
+                id: 372,
+                title: "Água funda",
+                author: "Dinah Silveira de Queiroz",
+                category: "Literatura Brasileira",
+                description: "Entrelaçando diferentes tempos e personagens, inseridos no universo de uma comunidade rural na Serra da Mantiqueira.",
+                year: 1946
+            },
+            {
+                id: 373,
+                title: "Alta fidelidade",
+                author: "Nick Hornby",
+                category: "Literatura Estrangeira",
+                description: "Rob é um sujeito perdido. Aos 35 anos, o rompimento com a namorada o leva a repensar todas as esferas da vida.",
+                year: 1995
+            },
+            {
+                id: 374,
+                title: "O amante de lady Chatterley",
+                author: "D.H. Lawrence",
+                category: "Literatura Estrangeira",
+                description: "Poucos meses depois de seu casamento, Constance Chatterley, uma garota criada numa família burguesa e liberal.",
+                year: 1928
+            },
+            {
+                id: 375,
+                title: "Assassinatos na Academia Brasileira de Letras",
+                author: "Jô Soares",
+                category: "Literatura Brasileira",
+                description: "Durante seu discurso de posse, o senador Belizário Bezerra, o mais novo imortal da Academia Brasileira de Letras.",
+                year: 2005
+            },
+            {
+                id: 376,
+                title: "O assassinato de Roger Ackroyd",
+                author: "Agatha Christie",
+                category: "Literatura Estrangeira",
+                description: "Três mortes estranhas em sequência despertam grande curiosidade na moradora de uma pequena vila inglesa.",
+                year: 1926
+            },
+            {
+                id: 377,
+                title: "O anel de Nibelungos",
+                author: "Richard Wagner",
+                category: "Literatura Estrangeira",
+                description: "'O Anel dos Nibelungos' é sua obra mais expressiva e também a mais fascinante.",
+                year: 1876
+            },
+            {
+                id: 378,
+                title: "Antes o Verão",
+                author: "Luiz Alfredo Garcia-Roza",
+                category: "Literatura Brasileira",
+                description: "Conta a história de um homem na faixa dos 40 anos que constrói uma bela casa de frente para o mar, em Cabo Frio.",
+                year: 1989
+            },
+            {
+                id: 379,
+                title: "Bebel que a cidade comeu",
+                author: "Lya Luft",
+                category: "Literatura Brasileira",
+                description: "Retrato ácido e sarcástico de um período negro da história brasileira, os anos 1960.",
+                year: 1979
+            },
+            {
+                id: 380,
+                title: "O beijo na parede",
+                author: "Paulo Scott",
+                category: "Literatura Brasileira",
+                description: "Forçado a deixar a cidade natal na companhia do pai para morar em um território estranho no sul do país.",
+                year: 2010
+            },
+            {
+                id: 381,
+                title: "Cabo de Guerra",
+                author: "José Roberto Torero",
+                category: "Literatura Brasileira",
+                description: "Uma linguiça. Dois cachorros. Um homem. Uma mulher. Um lobo. Os três porquinhos.",
+                year: 1995
+            },
+            {
+                id: 382,
+                title: "A cama",
+                author: "Lya Luft",
+                category: "Literatura Brasileira",
+                description: "Em O RIO E EU, após ser apresentada, ainda criança, ao Rio de Janeiro pela pitoresca Maria da Anunciação.",
+                year: 1999
+            },
+            {
+                id: 383,
+                title: "Caninos brancos",
+                author: "Jack London",
+                category: "Literatura Estrangeira",
+                description: "É um lobo nascido no território de Yukon, no norte congelado do Canadá, durante a corrida do ouro.",
+                year: 1906
+            },
+            {
+                id: 384,
+                title: "O caso da chácara chão",
+                author: "Alfredo Manfredi",
+                category: "Literatura Brasileira",
+                description: "Inspirado num episódio real, um assalto ao sítio do próprio autor, Alfredo Manfredi.",
+                year: 1987
+            },
+            {
+                id: 385,
+                title: "O castelo de minha mãe",
+                author: "Marcel Pagnol",
+                category: "Literatura Estrangeira",
+                description: "Os Pagnol passam a frequentar mais a casa de campo na Provença.",
+                year: 1957
+            },
+            {
+                id: 386,
+                title: "Cinzas do norte",
+                author: "Milton Hatoum",
+                category: "Literatura Brasileira",
+                description: "Na Manaus dos anos 1950 e 1960, dois meninos travam uma amizade que atravessará toda a vida.",
+                year: 2005
+            },
+            {
+                id: 387,
+                title: "No país das sombras longas",
+                author: "Hans Ruesch",
+                category: "Literatura Estrangeira",
+                description: "É um romance de Hans Ruesch, sobre a vida e costumes dos inuits (esquimós) no Ártico.",
+                year: 1950
+            },
+            {
+                id: 388,
+                title: "Peixe grande",
+                author: "Daniel Wallace",
+                category: "Literatura Estrangeira",
+                description: "No dia em que ele nasceu, uma nuvem carregada de raios, que queimavam a copa das árvores.",
+                year: 1998
+            },
+            {
+                id: 389,
+                title: "Pepetela",
+                author: "Pepetela",
+                category: "Literatura Estrangeira",
+                description: "Duas personagens femininas, dois momentos de um país.",
+                year: 2016
+            },
+            {
+                id: 390,
+                title: "O piano e a orquestra",
+                author: "Luiz Alfredo Garcia-Roza",
+                category: "Literatura Brasileira",
+                description: "No centro do romance estão dois primos, Olavo e Francisco.",
+                year: 1982
+            },
+            {
+                id: 391,
+                title: "A vendedora de fósforos",
+                author: "Lygia Fagundes Telles",
+                category: "Literatura Brasileira",
+                description: "Vidinha, negrinha, lindinha, olhos de jabuticaba mora na praça e se acostumou com a fome.",
+                year: 1965
+            },
+            {
+                id: 392,
+                title: "A glória de meu pai",
+                author: "Marcel Pagnol",
+                category: "Literatura Estrangeira",
+                description: "'Um testemunho sobre uma época desaparecida e uma pequena canção de amor filial que passará talvez hoje por uma grande novidade'.",
+                year: 1957
+            },
+            {
+                id: 393,
+                title: "Go",
+                author: "John Clellon Holmes",
+                category: "Literatura Estrangeira",
+                description: "Um livro que causou a comoção a ponto das pessoas fazerem a tatuagem do título.",
+                year: 1952
+            },
+            {
+                id: 394,
+                title: "O grande mentecapto",
+                author: "Fernando Sabino",
+                category: "Literatura Brasileira",
+                description: "Geraldo cresce e se dá conta de que sua forma de encarar o mundo está se transformando.",
+                year: 1979
+            },
+            {
+                id: 395,
+                title: "Homens e caranguejos",
+                author: "Josué de Castro",
+                category: "Literatura Brasileira",
+                description: "Narra a história de vida de um menino pobre que começa a descobrir o mundo e logo se depara com a miséria e a lama do mangue.",
+                year: 1967
+            },
+            {
+                id: 396,
+                title: "Cordel em arte e versos",
+                author: "Varneci Nascimento",
+                category: "Cordel",
+                description: "O leitor vai saber sobre as origens da literatura de Cordel.",
+                year: 2010
+            },
+            {
+                id: 397,
+                title: "O cortiço em cordel",
+                author: "José Francisco Borges",
+                category: "Cordel",
+                description: "Adaptação em cordel da obra de Aluísio Azevedo.",
+                year: 2005
+            },
+            {
+                id: 398,
+                title: "Desafios de cordel",
+                author: "Gonçalo Ferreira da Silva",
+                category: "Cordel",
+                description: "Desafios de cordel apresenta um panorama da literatura de cordel.",
+                year: 2008
+            },
+            {
+                id: 399,
+                title: "Dez clássicos universais em cordel",
+                author: "Klévisson Viana",
+                category: "Cordel",
+                description: "Doze obras de referência da literatura ocidental narradas em cordel.",
+                year: 2012
+            },
+            {
+                id: 400,
+                title: "As aventuras de Dom Quixote em versos de cordel",
+                author: "Klévisson Viana",
+                category: "Cordel",
+                description: "Nesta obra, o autor adapta o clássico Dom Quixote para os versos da tradicional literatura de cordel.",
+                year: 2015
+            }
+        ];
+    }
+
+    // Atualizar contadores de livros
+    function updateBookCounts() {
+        totalBooksElement.textContent = allBooks.length;
+        brazilianCountElement.textContent = allBooks.filter(book => book.category === "Literatura Brasileira").length;
+        classicsCountElement.textContent = allBooks.filter(book => book.category === "Literatura Estrangeira").length;
+        comicsCountElement.textContent = allBooks.filter(book => book.category === "Infantojuvenil").length;
+    }
+
+    // Filtrar livros
+    function filterBooks() {
+        const searchText = document.getElementById('searchInput').value.toLowerCase();
+        const category = document.getElementById('categoryFilter').value;
+        const sortBy = document.getElementById('sortFilter').value;
+        
+        filteredBooks = allBooks.filter(book => {
+            // Filtro de texto
+            const matchesSearch = book.title.toLowerCase().includes(searchText) || 
+                                 book.author.toLowerCase().includes(searchText) ||
+                                 (book.description && book.description.toLowerCase().includes(searchText));
+            
+            // Filtro de categoria
+            const matchesCategory = category === '' || book.category === category;
+            
+            return matchesSearch && matchesCategory;
+        });
+        
+        // Ordenar
+        if (sortBy === 'title') {
+            filteredBooks.sort((a, b) => a.title.localeCompare(b.title));
+        } else if (sortBy === 'author') {
+            filteredBooks.sort((a, b) => a.author.localeCompare(b.author));
+        } else if (sortBy === 'recent') {
+            filteredBooks.sort((a, b) => (b.year || 0) - (a.year || 0));
+        }
+        
+        currentPage = 1;
+        renderBooks();
+    }
+
+    // Renderizar livros
+    function renderBooks() {
+        booksGrid.innerHTML = '';
+        
+        if (filteredBooks.length === 0) {
+            booksGrid.innerHTML = '<div class="no-books"><p>Nenhum livro encontrado com os filtros selecionados.</p></div>';
+            pagination.innerHTML = '';
+            return;
+        }
+        
+        // Calcular páginas
+        const totalPages = Math.ceil(filteredBooks.length / booksPerPage);
+        const startIndex = (currentPage - 1) * booksPerPage;
+        const endIndex = startIndex + booksPerPage;
+        const booksToShow = filteredBooks.slice(startIndex, endIndex);
+        
+        // Adicionar livros ao grid
+        booksToShow.forEach(book => {
+            const bookCard = document.createElement('div');
+            bookCard.className = 'book-card';
+            
+            // Gerar cor baseada na categoria
+            const color = categoryColors[book.category] || "#666";
+            const svgPlaceholder = `<svg xmlns="http://www.w3.org/2000/svg" width="150" height="200" viewBox="0 0 150 200">
+                <rect fill="${color}" width="150" height="200"/>
+                <text fill="#fff" font-family="sans-serif" font-size="12" x="75" y="100" text-anchor="middle">${book.title.split(' ').slice(0, 3).join(' ')}</text>
+            </svg>`;
+            
+            bookCard.innerHTML = `
+                <div class="book-cover">
+                    ${svgPlaceholder}
+                </div>
+                <div class="book-info">
+                    <h3 class="book-title">${book.title}</h3>
+                    <p class="book-author">${book.author}</p>
+                    ${book.description ? `<p class="book-description">${book.description}</p>` : ''}
+                    <span class="book-category">${book.category}</span>
+                </div>
+            `;
+            
+            booksGrid.appendChild(bookCard);
+        });
+        
+        // Renderizar paginação
+        renderPagination(totalPages);
+    }
+
+    // Renderizar paginação
+    function renderPagination(totalPages) {
+        pagination.innerHTML = '';
+        
+        if (totalPages <= 1) return;
+        
+        // Botão anterior
+        if (currentPage > 1) {
+            const prevButton = document.createElement('button');
+            prevButton.innerHTML = '&laquo; Anterior';
+            prevButton.addEventListener('click', () => {
+                currentPage--;
+                renderBooks();
+            });
+            pagination.appendChild(prevButton);
+        }
+        
+        // Números das páginas (máximo de 5 botões)
+        let startPage = Math.max(1, currentPage - 2);
+        let endPage = Math.min(totalPages, startPage + 4);
+        
+        if (endPage - startPage < 4) {
+            startPage = Math.max(1, endPage - 4);
+        }
+        
+        for (let i = startPage; i <= endPage; i++) {
+            const pageButton = document.createElement('button');
+            pageButton.textContent = i;
+            if (i === currentPage) {
+                pageButton.classList.add('active');
+            }
+            pageButton.addEventListener('click', () => {
+                currentPage = i;
+                renderBooks();
+            });
+            pagination.appendChild(pageButton);
+        }
+        
+        // Botão próximo
+        if (currentPage < totalPages) {
+            const nextButton = document.createElement('button');
+            nextButton.innerHTML = 'Próximo &raquo;';
+            nextButton.addEventListener('click', () => {
+                currentPage++;
+                renderBooks();
+            });
+            pagination.appendChild(nextButton);
+        }
+    }
+</script>
+</body>
+</html>
